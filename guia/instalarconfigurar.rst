@@ -102,7 +102,7 @@ In this example, we will add a user named "Bob Jones" to LDAP inside the "Users"
 
 Agregar un usuario
 ++++++++++++++++++
-:
+::
 	
 	# cd /tmp
 	# vi bob.ldif
