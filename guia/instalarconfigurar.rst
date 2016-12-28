@@ -8,7 +8,7 @@ Instalar y configurar OpenLDAP en Centos 6
 
 Instalar y configurarOpenLDAP en Centos 6
 +++++++++++++++++++++++++++++++++++++++++
-.::
+::
 
 	# yum -y install openldap openldap-clients openldap-servers
 
@@ -82,7 +82,7 @@ CentOS 6 firewall habilitar el pueto por defecto que es 389.
 
 Argregar una unidad organizacional (OU)
 +++++++++++++++++++++++++++++++++++++++++++
-.::
+::
 
 	# cd /tmp
 	# vi users.ldif
@@ -98,24 +98,24 @@ Agregamos users.ldif al LDAP.::
 
 	# ldapsearch -x -LLL -b dc=domino,dc=local
 
-In this example, we will add a user named "Bob Jones" to LDAP inside the "Users" OU.
+In this example, we will add a user named "Carl Gomez" to LDAP inside the "Users" OU.
 
 Agregar un usuario
 ++++++++++++++++++
 ::
 	
 	# cd /tmp
-	# vi bob.ldif
-	dn: cn=Bob Jones,ou=Users,dc=domino,dc=local
-	cn: Bob Jones
-	sn: Jones
+	# vi Carl.ldif
+	dn: cn=Carl Gomez,ou=Users,dc=domino,dc=local
+	cn: Carl Gomez
+	sn: Gomez
 	objectClass: inetOrgPerson
 	userPassword: p@ssw0rd
-	uid: bjones
+	uid: bGomez
 
-Agregamos bob.ldif al LDAP.::
+Agregamos Carl.ldif al LDAP.::
 
-	# ldapadd -f bob.ldif -D cn=Manager,dc=domino,dc=local -w p@ssw0rd
+	# ldapadd -f Carl.ldif -D cn=Manager,dc=domino,dc=local -w p@ssw0rd
 	Adding a group
 	To add a group to LDAP
 
@@ -123,14 +123,14 @@ In this example, we will add a group called "Engineering" to LDAP inside the "Us
 
 Agregar un grupo
 ++++++++++++++++++
-.::
+::
 
 	# cd /tmp
 	# vi engineering.ldif
 	dn: cn=Engineering,ou=Users,dc=domino,dc=local
 	cn: Engineering
 	objectClass: groupOfNames
-	member: cn=Bob Jones,ou=Users,dc=domino,dc=local
+	member: cn=Carl Gomez,ou=Users,dc=domino,dc=local
 
 
 Agregamos engineering.ldif al LDAP.::
@@ -141,14 +141,14 @@ Agregamos engineering.ldif al LDAP.::
 
 Agregar un usuario a un grupo
 ++++++++++++++++++++++++++++++++
-.::
+::
 
 	# cd /tmp
 	[root]# vi addUserToGroup.ldif
 	dn: cn=Engineering,ou=Users,dc=domino,dc=local
 	changetype: modify
 	add: member
-	member: cn=Al Smith,ou=Users,dc=domino,dc=local
+	member: cn=Blas Goncalves,ou=Users,dc=domino,dc=local
 
 Agregamos addUserToGroup.ldif al LDAP.::
 
