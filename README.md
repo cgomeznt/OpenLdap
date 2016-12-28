@@ -1,0 +1,7 @@
+## OpenLdap
+
+
+* [Introducción a OpenLDAP](guia/introduccion.rst)
+* [Instalar y configurar OpenLDAP en Centos 6](guia/instalarconfigurar.rst)
+* [Respaldo y Restauracion de OpenLDAP](guia/respaldorestauracion.rst)
+* [Configuración de OpenLDAP como servidor de autenticación.](guia/configurarAutenticacion.rst)
