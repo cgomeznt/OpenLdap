@@ -92,6 +92,7 @@ Argregar una unidad organizacional (OU)
 	ou: Users
 
 Agregamos users.ldif al LDAP.::
+
 	# ldapadd -f users.ldif -D cn=Manager,dc=domino,dc=local -w Venezuela21
 	Adding a user
 	To add a user to LDAP

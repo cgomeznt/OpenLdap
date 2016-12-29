@@ -93,14 +93,14 @@ Creamos la llave primaria y un certificado autofirmad.::
 
 Realizamos pruebas, si no hubieramos colocado el "TLS_REQCERT allow" en /etc/openldap/ldap.conf los ldapsearch que vayan hacia el puerto 636 y que consulta los certificados, nos darian errores.::
 
-# ldapsearch -x  -b "dc=acme,dc=com"
-# ldapsearch -x  -b "dc=acme,dc=com" –ZZ
- 
-# ldapsearch -x -LLL -H ldaps://localhost:636 -D cn=Manager,dc=acme,dc=com -b dc=acme,dc=com -w Venezuela21
-# ldapsearch -x -LLL -H ldap://localhost:389 -D cn=Manager,dc=acme,dc=com -b dc=acme,dc=com -w Venezuela21
- 
-# ldapsearch -x -LLL -H ldaps://localhost:636 -D cn=Manager,dc=acme,dc=com -b dc=acme,dc=com -w Venezuela21 -d -1
-# ldapsearch -x -LLL -H ldap://localhost:389 -D cn=Manager,dc=acme,dc=com -b dc=acme,dc=com -w Venezuela21 -d -1
+	# ldapsearch -x  -b "dc=acme,dc=com"
+	# ldapsearch -x  -b "dc=acme,dc=com" –ZZ
+	 
+	# ldapsearch -x -LLL -H ldaps://localhost:636 -D cn=Manager,dc=acme,dc=com -b dc=acme,dc=com -w Venezuela21
+	# ldapsearch -x -LLL -H ldap://localhost:389 -D cn=Manager,dc=acme,dc=com -b dc=acme,dc=com -w Venezuela21
+	 
+	# ldapsearch -x -LLL -H ldaps://localhost:636 -D cn=Manager,dc=acme,dc=com -b dc=acme,dc=com -w Venezuela21 -d -1
+	# ldapsearch -x -LLL -H ldap://localhost:389 -D cn=Manager,dc=acme,dc=com -b dc=acme,dc=com -w Venezuela21 -d -1
  
 
 
