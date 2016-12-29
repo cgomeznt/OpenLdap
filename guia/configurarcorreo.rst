@@ -53,6 +53,7 @@ Editamos los adaptadores de red.::
 	# /etc/init.d/networking restart
 
 Modificamos los repositorios de debian::
+
 	# vi /etc/apt/sources.list
 	deb http://ftp.debian.org/debian squeeze main contrib non-free
 
