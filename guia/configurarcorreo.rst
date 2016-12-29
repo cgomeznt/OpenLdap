@@ -6,20 +6,20 @@ que tenga dos adaptadores de red. (Una adaptador de puente y la otra red Interna
 que /var y /tmp estén en particiones distintas.
 que la hora y fecha estén bien.
 
-El OpenLDAP tendrá la siguiente forma de árbol
+El OpenLDAP tendrá la siguiente forma de árbol::
 
-         dominio.local
-      	       |
-  _____________|___________
- |             |		  |	
-users    	groups      mails
-                          |
-            	   _______|________
-          		  |               |
-			 domio.local        test.org
-  				 |
-   			   cgome1
-  			  test1001
+		     dominio.local
+		  	       |
+	  _____________|___________
+	 |             |		  |	
+	users    	groups      mails
+		                      |
+		        	   _______|________
+		      		  |               |
+				 domio.local        test.org
+	  				 |
+	   			   cgome1
+	  			  test1001
 
 Cambiar el nombre del servidor::
 
