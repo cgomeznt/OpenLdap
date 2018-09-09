@@ -29,7 +29,13 @@ Verifica el LDAP.::
 	tcp        0      0 0.0.0.0:389             0.0.0.0:*               LISTEN      1520/slapd          
 	tcp6       0      0 :::389                  :::*                    LISTEN      1520/slapd
 
+Configurar los LOGs para LDAP
+Configuramos el syslog para habilitar los LOGs del ldap
 
+
+	# echo "local4.* /var/log/ldap.log" >> /etc/rsyslog.conf
+	# systemctl restart rsyslog
+	# systemctl restart slapd
 
 Configurar la contraseña de administrador de LDAP
 
