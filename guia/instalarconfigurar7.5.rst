@@ -1,4 +1,4 @@
-nstalar y configurar OpenLDAP en Centos 7.5
+Instalar y configurar OpenLDAP en Centos 7.5
 =========================================
 
 
@@ -83,7 +83,7 @@ Una vez que haya terminado con el archivo ldif, envíe la configuración al serv
 	modifying entry "olcDatabase={2}hdb,cn=config"
 
 
-Realice cambios en el archivo /etc/openldap/slapd.d/cn=config/olcDatabase={1}monitor.ldif (No edite manualmente) para restringir el acceso del monitor solo al usuario ldap root (ldapadm) y no a otros.:
+Realice cambios en el archivo /etc/openldap/slapd.d/cn=config/olcDatabase={1}monitor.ldif (No edite manualmente) para restringir el acceso del monitor solo al usuario ldap root (ldapadm) y no a otros.::
 
 	vi monitor.ldif
 	dn: olcDatabase={1}monitor,cn=config
@@ -263,9 +263,21 @@ Para eliminar una entrada de LDAP (opcional).::
 
 	ldapdelete -W -D "cn=ldapadm,dc=dominio,dc=local" "uid=cgomez,ou=People,dc=dominio,dc=local"
 
+Para Modificar una entrada de LDAP (opcional).::
+
+	# vi usermodify.ldiff
+	Para Modificar una entrada de LDAP (opcional).::
+	dn: uid=cgomez,ou=People,dc=dominio,dc=local
+	changetype: modify
+	replace: gecos
+	gecos: Carlos Gomez G [Admin (at) dominio]
 
 
+Ejecutamos la modificación.::
 
+	# ldapmodify -x -W -D "cn=ldapadm,dc=dominio,dc=local" -f usermodify.ldif 
+	Enter LDAP Password: America21
+	modifying entry "uid=cgomez,ou=People,dc=dominio,dc=local"
 
 
 
