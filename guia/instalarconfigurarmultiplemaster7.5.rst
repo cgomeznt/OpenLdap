@@ -29,7 +29,6 @@ Inicie el servicio LDAP y habilítelo para el inicio automático en el arranque 
 	systemctl enable slapd.service
 	systemctl status slapd.service
 
-**NOTA:** No reinicie los servidores o el servicio de LDAP hasta terminar el manual....!!!
 
 Configurar los LOGs LDAP
 ++++++++++++++++++++++++++
@@ -38,7 +37,10 @@ Configure syslog para habilitar el registro de LDAP.::
 
 	echo "local4.* /var/log/ldap.log" >> /etc/rsyslog.conf
 	systemctl restart rsyslog
+	systemctl restart slapd.service
 
+
+**NOTA:** No reinicie los servidores o el servicio de LDAP hasta terminar el manual....!!!
 
 Configurar la replicación OpenLDAP Multi-Master
 ++++++++++++++++++++++++++++++++++++++++++++++++
