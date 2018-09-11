@@ -259,12 +259,48 @@ Una vez que haya actualizado el archivo, envíe la configuración al servidor LD
 
 	ldapmodify -Y EXTERNAL  -H ldapi:/// -f monitor.ldif
 
+Resultado del comando.::
+
+	SASL/EXTERNAL authentication started
+	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+	SASL SSF: 0
+	modifying entry "olcDatabase={1}monitor,cn=config"
+
+
 
 Agregamos los siguientes schemas LDAP.::
 
 	ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+
+Resultado del comando.::
+
+	SASL/EXTERNAL authentication started
+	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+	SASL SSF: 0
+	adding new entry "cn=cosine,cn=schema,cn=config"
+
+schemas LDAP.::
+
 	ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif 
+
+Resultado del comando.::
+
+	SASL/EXTERNAL authentication started
+	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+	SASL SSF: 0
+	adding new entry "cn=nis,cn=schema,cn=config"
+
+schemas LDAP.::
+
 	ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+
+Resultado del comando.::
+
+	SASL/EXTERNAL authentication started
+	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+	SASL SSF: 0
+	adding new entry "cn=inetorgperson,cn=schema,cn=config"
+
 
 
 Genera el archivo base.ldif para tu dominio.::
