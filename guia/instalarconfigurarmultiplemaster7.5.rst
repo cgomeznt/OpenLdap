@@ -378,7 +378,7 @@ Resultado del comando.::
 	Enter LDAP Password:
 	adding new entry "uid=ldaptest,ou=People,dc=dominio,dc=local"
 
-En esta parte el openldap indicaba que lo agregaba pero luego no era así, lo que hice fue, crear este archivo.::
+En esta parte el openldap indicaba que lo agregaba pero luego no era así, lo que hice fue, crear este archivo y desplegarlo en todos los servers.::
 
 	vi olcserverid-2.ldif
 	### Update Server ID with LDAP URL ###
@@ -402,7 +402,7 @@ Resultado del comando.::
 
 **Luego de esto se puede reiniciar el servicio, servidor y siempre estara el Multi-Master**
 
-Ahora si, busque "ldaptest" en otro servidor maestro (ldapsrv2.dominio.local).::
+Ahora si, busque "ldaptest" en otro servidor maestro (ldapsrv2.dominio.local). Pero no deje de crear varios usuarios en un server y otro para certificar el funcionamiento::
 
 	ldapsearch -x cn=ldaptest -b dc=dominio,dc=local
 
@@ -455,8 +455,6 @@ Where,
 
 -D Distinguished name to authenticate to the LDAP server.
 
-
-Hasta aquí vamos bien...!! Ahora renicia el servicio del LDAP y no llores luego.
 
 
 Listo...!!!
