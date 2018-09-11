@@ -2,9 +2,20 @@ Instalar y configurar OpenLDAP Multiple-Master  Centos 7.5
 ============================================================
 
 
-En la replicación Multi-Master, dos o más servidores actúan como maestros y todos estos son autorizados para cualquier cambio en el directorio LDAP. Las consultas de los clientes se distribuyen en los servidores múltiples con la ayuda de la replicación.
+En la replicación Multi-Master, dos o más servidores actúan como maestros y todos estos son autorizados para cualquier cambio en el directorio LDAP. Las consultas de los clientes se distribuyen en los servidores múltiples con la ayuda de la replicación. Esto también es gracias a la versión de slapd 2.4.44. Abandonamos slurpd y vamos a usar syncrelp la nueva forma de sincronizar directorios Openldap.
 
-**IMPORTANTE** Tenga mucho cuidados con el formato de los archivos ldif, debe respetar los salto de linea, los espacio en blanco, los guiones "-", etc. Porque son muy delicados.
+Lo primero que vamos a hacer es configurar los servidores como maestro. Escucha peticiones de sincronización de sus pares y de los esclavos y les envía las actualizaciones solicitadas. La funcionalidad de maestro está implementada en el “overlay” syncprov (proveedor de sincronización). Lo primero es cargar el modulo y configurarlo. En nuestro OpenLdap debemos cargarlo moduleload syncprov)
+
+Configuramos nuevos índices que necesitamos en la nueva bbdd preparada para synrepl. **index entryCSN,entryUUID eq** 
+
+Me gusto este link: "https://insanecrew.wordpress.com/2009/01/27/replicacion-en-openldap-23x/"
+
+**IMPORTANTE** Tenga mucho cuidados con el formato de los archivos **ldif**, debe respetar los salto de linea, los espacio en blanco, los guiones "-", etc. Porque son muy delicados.
+
+La configuración de un OpenLDAP consta de dos grandes partes:
+* Una que es la replicación de la estructura del LDAP o Metadata, entre los nodos master
+* La otra es la replicación de la Base de Datos, aunque redundante, toda la data que sera almacenada en el LDAP.
+
 
 Ambiente
 ++++++++
@@ -40,6 +51,12 @@ Inicie el servicio LDAP y habilítelo para el inicio automático en el arranque 
 	systemctl start slapd.service
 	systemctl enable slapd.service
 	systemctl status slapd.service
+
+Verificamos los puertos del slapd por no dejar.::
+
+	# netstat -natp | grep slapd
+	tcp        0      0 0.0.0.0:389             0.0.0.0:*               LISTEN      2215/slapd          
+	tcp6       0      0 :::389                  :::*                    LISTEN      2215/slapd 
 
 
 Configurar los LOGs LDAP
