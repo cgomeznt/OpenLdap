@@ -133,7 +133,7 @@ Resultado del comando.::
 	modifying entry "olcDatabase={0}config,cn=config"
 
 
-Ahora configuraremos la replicación de la configuración en todos los servidores, uno para cada servidor y recuerde que debe cambiar el olcServerID.Por ejemplo, para ldapsrv1, establezca olcServerID en 1, para ldapsrv2, establezca olcServerID en 2.::
+Ahora configuraremos la replicación de la configuración en todos los servidores, uno para cada servidor.::
 
 	vi configrep.ldif
 
@@ -142,7 +142,8 @@ Ahora configuraremos la replicación de la configuración en todos los servidore
 	dn: cn=config
 	changetype: modify
 	replace: olcServerID
-	olcServerID: 1
+	olcServerID: 1 ldap://ldapsrv1.dominio.local
+	olcServerID: 2 ldap://ldapsrv2.dominio.local
 
 	### Enable Config Replication###
 
@@ -226,10 +227,10 @@ Configuración para la replicaciónpara la base de datos hdb. Puede obtener un e
 	olcRootPW: {SSHA}0TW9BL3cHyp8iEkj8hP19jIrANO5w8H4
 	-
 	add: olcSyncRepl
-	olcSyncRepl: rid=004 provider=ldap://ldapsrv1.dominio.local binddn="cn=ldapadm,dc=dominio,dc=local" bindmethod=simple
+	olcSyncRepl: rid=003 provider=ldap://ldapsrv1.dominio.local binddn="cn=ldapadm,dc=dominio,dc=local" bindmethod=simple
 	  credentials=America21 searchbase="dc=dominio,dc=local" type=refreshOnly
 	  interval=00:00:00:10 retry="5 5 300 5" timeout=1
-	olcSyncRepl: rid=005 provider=ldap://ldapsrv2.dominio.local binddn="cn=ldapadm,dc=dominio,dc=local" bindmethod=simple
+	olcSyncRepl: rid=004 provider=ldap://ldapsrv2.dominio.local binddn="cn=ldapadm,dc=dominio,dc=local" bindmethod=simple
 	  credentials=America21 searchbase="dc=dominio,dc=local" type=refreshOnly
 	  interval=00:00:00:10 retry="5 5 300 5" timeout=1
 	-
@@ -389,7 +390,7 @@ Resultado del comando.::
 	Enter LDAP Password:
 	adding new entry "uid=ldaptest,ou=People,dc=dominio,dc=local"
 
-En esta parte el openldap indicaba que lo agregaba pero luego no era así, lo que hice fue, crear este archivo y desplegarlo en todos los servers.::
+En esta parte el openldap indicaba que lo agregaba pero luego de esperar un rato no era así, lo que hice fue, crear este archivo y desplegarlo en todos los servers.::
 
 	vi olcserverid-2.ldif
 	### Update Server ID with LDAP URL ###
@@ -402,7 +403,7 @@ En esta parte el openldap indicaba que lo agregaba pero luego no era así, lo qu
 
 envíe la configuración al servidor LDAP.::
 
-	ldapmodify -Y EXTERNAL -H ldapi:/// -f configrep.ldif
+	ldapmodify -Y EXTERNAL -H ldapi:/// -f olcserverid-2.ldif
 
 Resultado del comando.::
 
