@@ -10,8 +10,8 @@ Ambiente
 Se utilizaran dos servidores en CentOS 7.5 y cada uno como Master OpenLdap.Agregamos las siguientes lineas en el /etc/hosts::
 	
 	# vi /etc/hosts
-	192.168.0.210	ldapsrv1.dominio.local ldapsrv1
-	192.168.0.220	ldapsrv2.dominio.local ldapsrv2
+	192.168.1.21	ldapsrv1.dominio.local ldapsrv1
+	192.168.1.22	ldapsrv2.dominio.local ldapsrv2
 
 **Importante** bien configurado el hosts y el hostname.::
 
@@ -31,7 +31,7 @@ Instale paquetes LDAP en todos sus servidores.::
 
 	# yum install openldap-servers openldap-clients
 
-No olvides el SELINUX y el Firewalld...!!!
+**No olvides el SELINUX y el Firewalld...!!!**
 
 Inicie el servicio LDAP y habilítelo para el inicio automático en el arranque del sistema.::
 
