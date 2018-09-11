@@ -16,7 +16,7 @@ Instalar paquetes OpenLDAP
 Instale los siguientes paquetes LDAP RPM en el servidor LDAP::
 
 	yum -y install openldap compat-openldap openldap-clients openldap-servers openldap-servers-sql openldap-devel
-	yum install openldap.x86_64 openldap-servers.x86_64 openssh-ldap.x86_64 openldap-devel openldap-clients.x86_64
+	yum install openldap.x86_64 compat-openldap.x86_64 openldap-servers.x86_64 openssh-ldap.x86_64 openldap-servers-sql.x86_64 openldap-devel.x86_64 openldap-clients.x86_64
 
 Inicie el servicio LDAP y habilítelo para el inicio automático del servicio en el inicio del sistema.::
 

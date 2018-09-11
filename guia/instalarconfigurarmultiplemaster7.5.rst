@@ -10,8 +10,8 @@ Ambiente
 Se utilizaran dos servidores en CentOS 7.5 y cada uno como Master OpenLdap.Agregamos las siguientes lineas en el /etc/hosts::
 	
 	# vi /etc/hosts
-	192.168.0.210	ldapsrv01.dominio.local ldapsrv01
-	192.168.0.220	ldapsrv02.dominio.local ldapsrv02
+	192.168.0.210	ldapsrv1.dominio.local ldapsrv01
+	192.168.0.220	ldapsrv2.dominio.local ldapsrv02
 
 
 Instalar LDAP
@@ -28,6 +28,7 @@ Inicie el servicio LDAP y habilítelo para el inicio automático en el arranque 
 	systemctl enable slapd.service
 	systemctl status slapd.service
 
+**NOTA:** No reinicie los servidores o el servio de LDAP hasta terminar el manual....!!!
 
 Configurar los LOGs LDAP
 ++++++++++++++++++++++++++
@@ -60,6 +61,9 @@ Habilitaremos el módulo syncprov.::
 ::
 
 	ldapadd -Y EXTERNAL -H ldapi:/// -f syncprov_mod.ldif
+
+Resultado del comando.::
+
 	SASL/EXTERNAL authentication started
 	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
 	SASL SSF: 0
@@ -69,7 +73,7 @@ Habilitaremos el módulo syncprov.::
 Habilitar la configuración replicación
 ++++++++++++++++++++++++++++++++++++++
 
-Cambie olcServerID en todos los servidores. Por ejemplo, para ldpsrv1, establezca olcServerID en 1, para ldpsrv2, establezca olcServerID en 2.::
+Cambie olcServerID en todos los servidores. Por ejemplo, para ldapsrv1, establezca olcServerID en 1, para ldapsrv2, establezca olcServerID en 2.::
 
 	vi olcserverid.ldif
 	dn: cn=config
@@ -80,6 +84,9 @@ Cambie olcServerID en todos los servidores. Por ejemplo, para ldpsrv1, establezc
 Actualizamos la configuración de LDAP.::
 
 	ldapmodify -Y EXTERNAL -H ldapi:/// -f olcserverid.ldif
+
+Resultado del comando.::
+
 	SASL/EXTERNAL authentication started
 	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
 	SASL SSF: 0
@@ -91,11 +98,7 @@ Necesitamos generar una contraseña para la replicación de la configuración de
 	{SSHA}0TW9BL3cHyp8iEkj8hP19jIrANO5w8H4
 
 
-Debe generar una contraseña en cada servidor ejecutando el comando slappasswd.
-
-Establecer una contraseña para la base de datos de configuración.::
-
-Debe generar una contraseña en cada servidor ejecutando el comando slappasswd. Debe ingresar la contraseña que generó en el paso anterior de este archivo.::
+Debe ingresar la contraseña que generó en el paso anterior de este archivo. Esta contraseña la puede utilizar en todos los servidores, sin necesidad de ejecutar nuevamente el comando slappasswd.::
 
 	vi olcdatabase.ldif
 	dn: olcDatabase={0}config,cn=config
@@ -106,6 +109,9 @@ Debe generar una contraseña en cada servidor ejecutando el comando slappasswd. 
 Actualizamos la configuración de LDAP.::
 
 	ldapmodify -Y EXTERNAL -H ldapi:/// -f olcdatabase.ldif
+
+Resultado del comando.::
+
 	SASL/EXTERNAL authentication started
 	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
 	SASL SSF: 0
@@ -121,8 +127,8 @@ Ahora configuraremos la replicación de la configuración en todos los servidore
 	dn: cn=config
 	changetype: modify
 	replace: olcServerID
-	olcServerID: 1 ldap://ldpsrv1.itzgeek.local
-	olcServerID: 2 ldap://ldpsrv2.itzgeek.local
+	olcServerID: 1 ldap://ldapsrv1.dominio.local
+	olcServerID: 2 ldap://ldapsrv2.dominio.local
 
 	### Enable Config Replication###
 
@@ -137,10 +143,10 @@ Ahora configuraremos la replicación de la configuración en todos los servidore
 	dn: olcDatabase={0}config,cn=config
 	changetype: modify
 	add: olcSyncRepl
-	olcSyncRepl: rid=001 provider=ldap://ldpsrv1.itzgeek.local binddn="cn=config"
+	olcSyncRepl: rid=001 provider=ldap://ldapsrv1.dominio.local binddn="cn=config"
 	  bindmethod=simple credentials=America21 searchbase="cn=config"
 	  type=refreshAndPersist retry="5 5 300 5" timeout=1
-	olcSyncRepl: rid=002 provider=ldap://ldpsrv2.itzgeek.local binddn="cn=config"
+	olcSyncRepl: rid=002 provider=ldap://ldapsrv2.dominio.local binddn="cn=config"
 	  bindmethod=simple credentials=America21 searchbase="cn=config"
 	  type=refreshAndPersist retry="5 5 300 5" timeout=1
 	-
@@ -150,6 +156,9 @@ Ahora configuraremos la replicación de la configuración en todos los servidore
 Actualizamos la configuración de LDAP.::
 
 	ldapmodify -Y EXTERNAL -H ldapi:/// -f configrep.ldif
+
+Resultado del comando.::
+
 	SASL/EXTERNAL authentication started
 	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
 	SASL SSF: 0
@@ -180,6 +189,8 @@ Actualizamos la configuración de LDAP.::
 
 	ldapmodify -Y EXTERNAL -H ldapi:/// -f syncprov.ldif
 
+Resultado del comando.::
+
 	SASL/EXTERNAL authentication started
 	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
 	SASL SSF: 0
@@ -192,20 +203,20 @@ Configuración para la replicaciónpara la base de datos hdb. Puede obtener un e
 	dn: olcDatabase={2}hdb,cn=config
 	changetype: modify
 	replace: olcSuffix
-	olcSuffix: dc=itzgeek,dc=local
+	olcSuffix: dc=dominio,dc=local
 	-
 	replace: olcRootDN
-	olcRootDN: cn=ldapadm,dc=itzgeek,dc=local
+	olcRootDN: cn=ldapadm,dc=dominio,dc=local
 	-
 	replace: olcRootPW
 	olcRootPW: {SSHA}0TW9BL3cHyp8iEkj8hP19jIrANO5w8H4
 	-
 	add: olcSyncRepl
-	olcSyncRepl: rid=004 provider=ldap://ldpsrv1.itzgeek.local binddn="cn=ldapadm,dc=itzgeek,dc=local" bindmethod=simple
-	  credentials=America21 searchbase="dc=itzgeek,dc=local" type=refreshOnly
+	olcSyncRepl: rid=004 provider=ldap://ldapsrv1.dominio.local binddn="cn=ldapadm,dc=dominio,dc=local" bindmethod=simple
+	  credentials=America21 searchbase="dc=dominio,dc=local" type=refreshOnly
 	  interval=00:00:00:10 retry="5 5 300 5" timeout=1
-	olcSyncRepl: rid=005 provider=ldap://ldpsrv2.itzgeek.local binddn="cn=ldapadm,dc=itzgeek,dc=local" bindmethod=simple
-	  credentials=America21 searchbase="dc=itzgeek,dc=local" type=refreshOnly
+	olcSyncRepl: rid=005 provider=ldap://ldapsrv2.dominio.local binddn="cn=ldapadm,dc=dominio,dc=local" bindmethod=simple
+	  credentials=America21 searchbase="dc=dominio,dc=local" type=refreshOnly
 	  interval=00:00:00:10 retry="5 5 300 5" timeout=1
 	-
 	add: olcDbIndex
@@ -223,6 +234,8 @@ Una vez que haya actualizado el archivo, envíe la configuración al servidor LD
 
 	ldapmodify -Y EXTERNAL  -H ldapi:/// -f olcdatabasehdb.ldif
 
+Resultado del comando.::
+
 	SASL/EXTERNAL authentication started
 	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
 	SASL SSF: 0
@@ -236,7 +249,7 @@ Realice cambios en el archivo olcDatabase={1} monitor.ldif para restringir el ac
 	dn: olcDatabase={1}monitor,cn=config
 	changetype: modify
 	replace: olcAccess
-	olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external, cn=auth" read by dn.base="cn=ldapadm,dc=itzgeek,dc=local" read by * none
+	olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external, cn=auth" read by dn.base="cn=ldapadm,dc=dominio,dc=local" read by * none
 
 
 Una vez que haya actualizado el archivo, envíe la configuración al servidor LDAP.::
@@ -255,48 +268,50 @@ Genera el archivo base.ldif para tu dominio.::
 
 	# vi base.ldif
 
-	dn: dc=itzgeek,dc=local
-	dc: itzgeek
+	dn: dc=dominio,dc=local
+	dc: dominio
 	objectClass: top
 	objectClass: domain
 
-	dn: cn=ldapadm ,dc=itzgeek,dc=local
+	dn: cn=ldapadm ,dc=dominio,dc=local
 	objectClass: organizationalRole
 	cn: ldapadm
 	description: LDAP Manager
 
-	dn: ou=People,dc=itzgeek,dc=local
+	dn: ou=People,dc=dominio,dc=local
 	objectClass: organizationalUnit
 	ou: People
 
-	dn: ou=Group,dc=itzgeek,dc=local
+	dn: ou=Group,dc=dominio,dc=local
 	objectClass: organizationalUnit
 	ou: Group
 
 
 Generamos la estructura del directorio.::
 
-	ldapadd -x -W -D "cn=ldapadm,dc=itzgeek,dc=local" -f base.ldif
+	ldapadd -x -W -D "cn=ldapadm,dc=dominio,dc=local" -f base.ldif
+
+Resultado del comando.::
 
 	Enter LDAP Password:
-	adding new entry "dc=itzgeek,dc=local"
+	adding new entry "dc=dominio,dc=local"
 
-	adding new entry "cn=ldapadm ,dc=itzgeek,dc=local"
+	adding new entry "cn=ldapadm ,dc=dominio,dc=local"
 
-	adding new entry "ou=People,dc=itzgeek,dc=local"
+	adding new entry "ou=People,dc=dominio,dc=local"
 
-	adding new entry "ou=Group,dc=itzgeek,dc=local"
+	adding new entry "ou=Group,dc=dominio,dc=local"
 
 
 Pruebe de replicación en el LDAP
 ++++++++++++++++++++++++++++++++
 
 
-Creemos un usuario LDAP llamado "ldaptest" en cualquiera de sus servidores maestros, para hacer eso, cree un archivo .ldif en ldpsrv1.itzgeek.local (en mi caso).::
+Creemos un usuario LDAP llamado "ldaptest" en cualquiera de sus servidores maestros, para hacer eso, cree un archivo .ldif en ldapsrv1.dominio.local (en mi caso).::
 
 	vi ldaptest.ldif
 
-	dn: uid=ldaptest,ou=People,dc=itzgeek,dc=local
+	dn: uid=ldaptest,ou=People,dc=dominio,dc=local
 	objectClass: top
 	objectClass: account
 	objectClass: posixAccount
@@ -317,26 +332,31 @@ Creemos un usuario LDAP llamado "ldaptest" en cualquiera de sus servidores maest
 
 Agregue un usuario al servidor LDAP usando el comando ldapadd.::
 
-	ldapadd -x -W -D "cn=ldapadm,dc=itzgeek,dc=local" -f ldaptest.ldif
+	ldapadd -x -W -D "cn=ldapadm,dc=dominio,dc=local" -f ldaptest.ldif
+
+Resultado del comando.::
+
 	Enter LDAP Password:
-	adding new entry "uid=ldaptest,ou=People,dc=itzgeek,dc=local"
+	adding new entry "uid=ldaptest,ou=People,dc=dominio,dc=local"
 
 
 
-Busque "ldaptest" en otro servidor maestro (ldpsrv2.itzgeek.local).::
+Busque "ldaptest" en otro servidor maestro (ldapsrv2.dominio.local).::
 
-	ldapsearch -x cn=ldaptest -b dc=itzgeek,dc=local
+	ldapsearch -x cn=ldaptest -b dc=dominio,dc=local
+
+Resultado del comando.::
 
 	# extended LDIF
 	#
 	# LDAPv3
-	# base <dc=itzgeek,dc=local> with scope subtree
+	# base <dc=dominio,dc=local> with scope subtree
 	# filter: cn=ldaptest
 	# requesting: ALL
 	#
 
-	# ldaptest, People, itzgeek.local
-	dn: uid=ldaptest,ou=People,dc=itzgeek,dc=local
+	# ldaptest, People, dominio.local
+	dn: uid=ldaptest,ou=People,dc=dominio,dc=local
 	objectClass: top
 	objectClass: account
 	objectClass: posixAccount
@@ -361,9 +381,9 @@ Busque "ldaptest" en otro servidor maestro (ldpsrv2.itzgeek.local).::
 	# numResponses: 2
 	# numEntries: 1
 
-Ahora, establezca una contraseña para el usuario creado en ldpsrv1.itzgeek.local yendo a ldpsrv2.itzgeek.local. Si puede establecer la contraseña, eso significa que la replicación está funcionando como se esperaba.::
+Ahora, establezca una contraseña para el usuario creado en ldapsrv1.dominio.local yendo a ldapsrv2.dominio.local. Si puede establecer la contraseña, eso significa que la replicación está funcionando como se esperaba.::
 
-	ldappasswd -s password123 -W -D "cn=ldapadm,dc=itzgeek,dc=local" -x "uid=ldaptest,ou=People,dc=itzgeek,dc=local"
+	ldappasswd -s password123 -W -D "cn=ldapadm,dc=dominio,dc=local" -x "uid=ldaptest,ou=People,dc=dominio,dc=local"
 
 
 Where,
@@ -375,6 +395,8 @@ Where,
 -D Distinguished name to authenticate to the LDAP server.
 
 
+
+Listo...!!!
 
 
 
