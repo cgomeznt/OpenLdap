@@ -4,6 +4,8 @@ Instalar y configurar OpenLDAP Multiple-Master  Centos 7.5
 
 En la replicación Multi-Master, dos o más servidores actúan como maestros y todos estos son autorizados para cualquier cambio en el directorio LDAP. Las consultas de los clientes se distribuyen en los servidores múltiples con la ayuda de la replicación.
 
+**IMPORTANTE** Tenga mucho cuidados con el formato de los archivos ldif, debe respetar los salto de linea, los espacio en blanco, los guiones "-", etc. Porque son muy delicados.
+
 Ambiente
 ++++++++
 
@@ -159,10 +161,10 @@ Ahora configuraremos la replicación de la configuración en todos los servidore
 	changetype: modify
 	add: olcSyncRepl
 	olcSyncRepl: rid=001 provider=ldap://ldapsrv1.dominio.local binddn="cn=config"
-	  bindmethod=simple credentials=America21 searchbase="cn=config"
+	  bindmethod=simple credentials=**America21** searchbase="cn=config"
 	  type=refreshAndPersist retry="5 5 300 5" timeout=1
 	olcSyncRepl: rid=002 provider=ldap://ldapsrv2.dominio.local binddn="cn=config"
-	  bindmethod=simple credentials=America21 searchbase="cn=config"
+	  bindmethod=simple credentials=**America21** searchbase="cn=config"
 	  type=refreshAndPersist retry="5 5 300 5" timeout=1
 	-
 	add: olcMirrorMode
@@ -228,10 +230,10 @@ Configuración para la replicación de la base de datos hdb. Puede obtener un er
 	-
 	add: olcSyncRepl
 	olcSyncRepl: rid=003 provider=ldap://ldapsrv1.dominio.local binddn="cn=ldapadm,dc=dominio,dc=local" bindmethod=simple
-	  credentials=America21 searchbase="dc=dominio,dc=local" type=refreshOnly
+	  credentials=**America21** searchbase="dc=dominio,dc=local" type=refreshOnly
 	  interval=00:00:00:10 retry="5 5 300 5" timeout=1
 	olcSyncRepl: rid=004 provider=ldap://ldapsrv2.dominio.local binddn="cn=ldapadm,dc=dominio,dc=local" bindmethod=simple
-	  credentials=America21 searchbase="dc=dominio,dc=local" type=refreshOnly
+	  credentials=**America21** searchbase="dc=dominio,dc=local" type=refreshOnly
 	  interval=00:00:00:10 retry="5 5 300 5" timeout=1
 	-
 	add: olcDbIndex
@@ -390,31 +392,7 @@ Resultado del comando.::
 	Enter LDAP Password:
 	adding new entry "uid=ldaptest,ou=People,dc=dominio,dc=local"
 
-En esta parte el openldap indicaba que lo agregaba pero luego de esperar un rato no era así, lo que hice fue, crear este archivo y desplegarlo en todos los servers.::
-
-	vi olcserverid-2.ldif
-	### Update Server ID with LDAP URL ###
-
-	dn: cn=config
-	changetype: modify
-	replace: olcServerID
-	olcServerID: 1 ldap://ldapsrv1.dominio.local
-	olcServerID: 2 ldap://ldapsrv2.dominio.local
-
-envíe la configuración al servidor LDAP.::
-
-	ldapmodify -Y EXTERNAL -H ldapi:/// -f olcserverid-2.ldif
-
-Resultado del comando.::
-
-	SASL/EXTERNAL authentication started
-	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
-	SASL SSF: 0
-	modifying entry "cn=config"
-
-**Luego de esto se puede reiniciar el servicio, servidor y siempre estará el Multi-Master**
-
-Ahora si, busque "ldaptest" en otro servidor maestro (ldapsrv2.dominio.local). Pero no deje de crear varios usuarios en un server y otro para certificar el funcionamiento::
+Busque "ldaptest" en otro servidor maestro (ldapsrv2.dominio.local). Pero no deje de crear varios usuarios en un server y otro para certificar el funcionamiento::
 
 	ldapsearch -x cn=ldaptest -b dc=dominio,dc=local
 
@@ -457,6 +435,31 @@ Resultado del comando.::
 Ahora, establezca una contraseña para el usuario creado en ldapsrv1.dominio.local yendo a ldapsrv2.dominio.local. Si puede establecer la contraseña, eso significa que la replicación está funcionando como se esperaba.::
 
 	ldappasswd -s password123 -W -D "cn=ldapadm,dc=dominio,dc=local" -x "uid=ldaptest,ou=People,dc=dominio,dc=local"
+
+
+Si se observa cualquier comportamiento no deseado en la replica de la BD actualice los olcServerID.::
+
+	vi olcserverid-2.ldif
+	### Update Server ID with LDAP URL ###
+
+	dn: cn=config
+	changetype: modify
+	replace: olcServerID
+	olcServerID: 1 ldap://ldapsrv1.dominio.local
+	olcServerID: 2 ldap://ldapsrv2.dominio.local
+
+envíe la configuración al servidor LDAP.::
+
+	ldapmodify -Y EXTERNAL -H ldapi:/// -f olcserverid-2.ldif
+
+Resultado del comando.::
+
+	SASL/EXTERNAL authentication started
+	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+	SASL SSF: 0
+	modifying entry "cn=config"
+
+**Luego de esto se puede reiniciar el servicio, servidor y siempre estará el Multi-Master**
 
 
 Dónde,
