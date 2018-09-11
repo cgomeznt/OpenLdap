@@ -10,8 +10,8 @@ Ambiente
 Se utilizaran dos servidores en CentOS 7.5 y cada uno como Master OpenLdap.Agregamos las siguientes lineas en el /etc/hosts::
 	
 	# vi /etc/hosts
-	192.168.0.210	ldapsrv1.dominio.local ldapsrv01
-	192.168.0.220	ldapsrv2.dominio.local ldapsrv02
+	192.168.0.210	ldapsrv1.dominio.local ldapsrv1
+	192.168.0.220	ldapsrv2.dominio.local ldapsrv2
 
 
 Instalar LDAP
@@ -21,6 +21,7 @@ Instale paquetes LDAP en todos sus servidores.::
 
 	# yum install openldap-servers openldap-clients
 
+No olvides el SELINUX y el Firewalld...!!!
 
 Inicie el servicio LDAP y habilítelo para el inicio automático en el arranque del sistema.::
 
@@ -28,15 +29,15 @@ Inicie el servicio LDAP y habilítelo para el inicio automático en el arranque 
 	systemctl enable slapd.service
 	systemctl status slapd.service
 
-**NOTA:** No reinicie los servidores o el servio de LDAP hasta terminar el manual....!!!
+**NOTA:** No reinicie los servidores o el servicio de LDAP hasta terminar el manual....!!!
 
 Configurar los LOGs LDAP
 ++++++++++++++++++++++++++
 
 Configure syslog para habilitar el registro de LDAP.::
 
-	cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
-	chown ldap:ldap /var/lib/ldap/*
+	echo "local4.* /var/log/ldap.log" >> /etc/rsyslog.conf
+	systemctl restart rsyslog
 
 
 Configurar la replicación OpenLDAP Multi-Master
@@ -45,7 +46,7 @@ Configurar la replicación OpenLDAP Multi-Master
 
 Copie el archivo de configuración de la base de datos de muestra en el directorio /var/lib/ldap y actualice los permisos del archivo.::
 
-	cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+	cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG 
 	chown ldap:ldap /var/lib/ldap/*
 
 
