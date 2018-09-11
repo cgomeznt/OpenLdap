@@ -178,10 +178,10 @@ Ahora configuraremos la replicación de la configuración en todos los servidore
 	changetype: modify
 	add: olcSyncRepl
 	olcSyncRepl: rid=001 provider=ldap://ldapsrv1.dominio.local binddn="cn=config"
-	  bindmethod=simple credentials=**America21** searchbase="cn=config"
+	  bindmethod=simple credentials=America21 searchbase="cn=config"
 	  type=refreshAndPersist retry="5 5 300 5" timeout=1
 	olcSyncRepl: rid=002 provider=ldap://ldapsrv2.dominio.local binddn="cn=config"
-	  bindmethod=simple credentials=**America21** searchbase="cn=config"
+	  bindmethod=simple credentials=America21 searchbase="cn=config"
 	  type=refreshAndPersist retry="5 5 300 5" timeout=1
 	-
 	add: olcMirrorMode
@@ -247,10 +247,10 @@ Configuración para la replicación de la base de datos hdb. Puede obtener un er
 	-
 	add: olcSyncRepl
 	olcSyncRepl: rid=003 provider=ldap://ldapsrv1.dominio.local binddn="cn=ldapadm,dc=dominio,dc=local" bindmethod=simple
-	  credentials=**America21** searchbase="dc=dominio,dc=local" type=refreshOnly
+	  credentials=America21 searchbase="dc=dominio,dc=local" type=refreshOnly
 	  interval=00:00:00:10 retry="5 5 300 5" timeout=1
 	olcSyncRepl: rid=004 provider=ldap://ldapsrv2.dominio.local binddn="cn=ldapadm,dc=dominio,dc=local" bindmethod=simple
-	  credentials=**America21** searchbase="dc=dominio,dc=local" type=refreshOnly
+	  credentials=America21 searchbase="dc=dominio,dc=local" type=refreshOnly
 	  interval=00:00:00:10 retry="5 5 300 5" timeout=1
 	-
 	add: olcDbIndex
