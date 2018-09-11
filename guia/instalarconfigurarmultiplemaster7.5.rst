@@ -469,13 +469,18 @@ Dónde,
 
 
 
+
 Listo...!!!
 Gracias a Efrhen Isturdes
 
 También
+
 https://www.itzgeek.com/how-tos/linux/centos-how-tos/configure-openldap-multi-master-replication-linux.html
+
 https://linoxide.com/linux-how-to/setup-openldap-multi-master-replication-centos-7/
+
 https://www.server-world.info/en/note?os=CentOS_7&p=openldap&f=6
+
 http://www.cyrill-gremaud.ch/howto-setup-n-way-multi-master-replication-with-openldap/
 
 
