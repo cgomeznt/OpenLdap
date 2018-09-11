@@ -348,7 +348,7 @@ Pruebe de replicación en el LDAP
 
 Creemos un usuario LDAP llamado "ldaptest" en cualquiera de sus servidores maestros, para hacer eso, cree un archivo .ldif en ldapsrv1.dominio.local (en mi caso).::
 
-	vi ldaptest.ldif
+	vi user.ldif
 
 	dn: uid=ldaptest,ou=People,dc=dominio,dc=local
 	objectClass: top
@@ -371,7 +371,7 @@ Creemos un usuario LDAP llamado "ldaptest" en cualquiera de sus servidores maest
 
 Agregue un usuario al servidor LDAP usando el comando ldapadd.::
 
-	ldapadd -x -W -D "cn=ldapadm,dc=dominio,dc=local" -f ldaptest.ldif
+	ldapadd -x -W -D "cn=ldapadm,dc=dominio,dc=local" -f user.ldif
 
 Resultado del comando.::
 
