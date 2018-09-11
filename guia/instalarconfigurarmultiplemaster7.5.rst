@@ -121,7 +121,7 @@ Resultado del comando.::
 	modifying entry "olcDatabase={0}config,cn=config"
 
 
-Ahora configuraremos la replicación de la configuración en todos los servidores.::
+Ahora configuraremos la replicación de la configuración en todos los servidores, uno para cada servidor y recuerde que debe cambiar el olcServerID.::
 
 	vi configrep.ldif
 
@@ -378,9 +378,31 @@ Resultado del comando.::
 	Enter LDAP Password:
 	adding new entry "uid=ldaptest,ou=People,dc=dominio,dc=local"
 
+En esta parte el openldap indicaba que lo agregaba pero luego no era así, lo que hice fue, crear este archivo.::
 
+	vi olcserverid-2.ldif
+	### Update Server ID with LDAP URL ###
 
-Busque "ldaptest" en otro servidor maestro (ldapsrv2.dominio.local).::
+	dn: cn=config
+	changetype: modify
+	replace: olcServerID
+	olcServerID: 1 ldap://ldapsrv1.dominio.local
+	olcServerID: 2 ldap://ldapsrv2.dominio.local
+
+envíe la configuración al servidor LDAP.::
+
+	ldapmodify -Y EXTERNAL -H ldapi:/// -f configrep.ldif
+
+Resultado del comando.::
+
+	SASL/EXTERNAL authentication started
+	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+	SASL SSF: 0
+	modifying entry "cn=config"
+
+**Luego de esto se puede reiniciar el servicio, servidor y siempre estara el Multi-Master**
+
+Ahora si, busque "ldaptest" en otro servidor maestro (ldapsrv2.dominio.local).::
 
 	ldapsearch -x cn=ldaptest -b dc=dominio,dc=local
 
@@ -433,6 +455,8 @@ Where,
 
 -D Distinguished name to authenticate to the LDAP server.
 
+
+Hasta aquí vamos bien...!! Ahora renicia el servicio del LDAP y no llores luego.
 
 
 Listo...!!!
