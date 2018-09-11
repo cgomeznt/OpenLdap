@@ -121,7 +121,7 @@ Resultado del comando.::
 	modifying entry "olcDatabase={0}config,cn=config"
 
 
-Ahora configuraremos la replicación de la configuración en todos los servidores, uno para cada servidor y recuerde que debe cambiar el olcServerID.::
+Ahora configuraremos la replicación de la configuración en todos los servidores, uno para cada servidor y recuerde que debe cambiar el olcServerID.Por ejemplo, para ldapsrv1, establezca olcServerID en 1, para ldapsrv2, establezca olcServerID en 2.::
 
 	vi configrep.ldif
 
@@ -130,8 +130,7 @@ Ahora configuraremos la replicación de la configuración en todos los servidore
 	dn: cn=config
 	changetype: modify
 	replace: olcServerID
-	olcServerID: 1 ldap://ldapsrv1.dominio.local
-	olcServerID: 2 ldap://ldapsrv2.dominio.local
+	olcServerID: 1
 
 	### Enable Config Replication###
 
