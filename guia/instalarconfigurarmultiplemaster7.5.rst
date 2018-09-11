@@ -13,6 +13,16 @@ Se utilizaran dos servidores en CentOS 7.5 y cada uno como Master OpenLdap.Agreg
 	192.168.0.210	ldapsrv1.dominio.local ldapsrv1
 	192.168.0.220	ldapsrv2.dominio.local ldapsrv2
 
+**Importante** bien configurado el hosts y el hostname.::
+
+	[root@ldapsrv1 ~]# hostname
+	ldapsrv1.dominio.local
+
+
+	[root@ldapsrv2 ~]# hostname
+	ldapsrv1.dominio.local
+
+
 
 Instalar LDAP
 +++++++++++++
@@ -38,6 +48,8 @@ Configure syslog para habilitar el registro de LDAP.::
 	echo "local4.* /var/log/ldap.log" >> /etc/rsyslog.conf
 	systemctl restart rsyslog
 	systemctl restart slapd.service
+
+	tail -f /var/log/ldap.log
 
 
 **NOTA:** No reinicie los servidores o el servicio de LDAP hasta terminar el manual....!!!
