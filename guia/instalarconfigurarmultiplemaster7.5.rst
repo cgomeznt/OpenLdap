@@ -211,7 +211,7 @@ Resultado del comando.::
 	SASL SSF: 0
 	adding new entry "olcOverlay=syncprov,olcDatabase={2}hdb,cn=config"
 
-Configuración para la replicaciónpara la base de datos hdb. Puede obtener un error para olcSuffix, olcRootDN y olcRootPW si ya tiene estos en su configuración. Elimine las entradas, si no es necesario.::
+Configuración para la replicación de la base de datos hdb. Puede obtener un error para olcSuffix, olcRootDN y olcRootPW si ya tiene estos en su configuración. Elimine las entradas, si no es necesario.::
 
 	vi olcdatabasehdb.ldif
 
@@ -412,7 +412,7 @@ Resultado del comando.::
 	SASL SSF: 0
 	modifying entry "cn=config"
 
-**Luego de esto se puede reiniciar el servicio, servidor y siempre estara el Multi-Master**
+**Luego de esto se puede reiniciar el servicio, servidor y siempre estará el Multi-Master**
 
 Ahora si, busque "ldaptest" en otro servidor maestro (ldapsrv2.dominio.local). Pero no deje de crear varios usuarios en un server y otro para certificar el funcionamiento::
 
@@ -459,7 +459,7 @@ Ahora, establezca una contraseña para el usuario creado en ldapsrv1.dominio.loc
 	ldappasswd -s password123 -W -D "cn=ldapadm,dc=dominio,dc=local" -x "uid=ldaptest,ou=People,dc=dominio,dc=local"
 
 
-Where,
+Dónde,
 
 -s specify the password for the username
 
@@ -470,6 +470,13 @@ Where,
 
 
 Listo...!!!
+Gracias a Efrhen Isturdes
+
+También
+https://www.itzgeek.com/how-tos/linux/centos-how-tos/configure-openldap-multi-master-replication-linux.html
+https://linoxide.com/linux-how-to/setup-openldap-multi-master-replication-centos-7/
+https://www.server-world.info/en/note?os=CentOS_7&p=openldap&f=6
+http://www.cyrill-gremaud.ch/howto-setup-n-way-multi-master-replication-with-openldap/
 
 
 
