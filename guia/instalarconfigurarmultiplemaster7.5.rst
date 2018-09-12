@@ -453,6 +453,7 @@ Ahora, establezca una contraseña para el usuario creado en ldapsrv1.dominio.loc
 
 	ldappasswd -s password123 -W -D "cn=ldapadm,dc=dominio,dc=local" -x "uid=ldaptest,ou=People,dc=dominio,dc=local"
 
+**Si luego de hacer todo esto y reinicia el servicio y le genera erro y en los LOGS le indica que no puede obtener el ServerID, es un problema con su archivo "hosts" o con los DNS**
 
 Si se observa cualquier comportamiento no deseado en la replica de la BD actualice los olcServerID.::
 
