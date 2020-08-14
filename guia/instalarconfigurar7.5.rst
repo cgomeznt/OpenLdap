@@ -9,6 +9,7 @@ Funciona como una base de datos relacional de ciertas maneras y se puede usar pa
 
 Configuraremos OpenLDAP para el inicio de sesión centralizado donde los usuarios usan la cuenta única para iniciar sesión en varios servidores.
 
+**IMPORTANTE** Tenga mucho cuidados con el formato de los archivos **ldif**, debe respetar los salto de linea, los espacio en blanco, los guiones "-", etc. Porque son muy delicados.
 
 Instalar paquetes OpenLDAP
 ++++++++++++++++++++++++++++
@@ -28,6 +29,8 @@ Verifica el LDAP.::
 	netstat -antup | grep -i 389
 	tcp        0      0 0.0.0.0:389             0.0.0.0:*               LISTEN      1520/slapd          
 	tcp6       0      0 :::389                  :::*                    LISTEN      1520/slapd
+
+**Importante** bien configurado el hosts y el hostname.::
 
 Configurar los LOGs para LDAP
 Configuramos el syslog para habilitar los LOGs del ldap::
