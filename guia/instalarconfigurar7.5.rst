@@ -30,7 +30,7 @@ Verifica el LDAP.::
 	tcp6       0      0 :::389                  :::*                    LISTEN      1520/slapd
 
 Configurar los LOGs para LDAP
-Configuramos el syslog para habilitar los LOGs del ldap
+Configuramos el syslog para habilitar los LOGs del ldap::
 
 
 	# echo "local4.* /var/log/ldap.log" >> /etc/rsyslog.conf
