@@ -11,4 +11,5 @@
 * [Instalar y configurar OpenLDAP Multiple-Master  Centos 7.5](guia/instalarconfigurarmultiplemaster7.5.rst)
 * [Respaldo y Restauracion de OpenLDAP Otra forma](guia/respaldorestauracion2.rst) 
 * [Configurar un cliente LDAP para que use un server LDAP](guia/clienteLDAP.rst) 
+* [Agregar schema sudo a LDAP utilizando OLC](guia/schemasudo.rst) 
 
