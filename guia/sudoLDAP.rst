@@ -11,7 +11,7 @@ Para configurar SUDO a través del servidor OpenLDAP, debe cargar y habilitar lo
 Create OpenLDAP SUDOers Organization Unit (ou)
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Antes de poder configurar SUDO a través de OpenLDAP Server, debe crear SUDOers en la estructura de directorios de su organización.
+Antes de poder configurar SUDO a través de OpenLDAP Server, debe crear SUDOers en la estructura de directorios de su organización.::
 
 	# vi sudoersou.ldif
 	dn: ou=SUDOers,dc=dominio,dc=local
@@ -363,13 +363,13 @@ Para ello, puede utilizar la opción NOPASSWD OpenLDAP SUDO,!authenticate con el
 
 	dn: cn=lsanche,ou=SUDOers,dc=dominio,dc=local
 	cn: lsanche
-	objectclass: top
-	objectclass: sudoRole
-	sudocommand: ALL
-	sudohost: ALL
-	sudooption: !authenticate
-	sudorunasuser: ALL
-	sudouser: lsanche
+	objectClass: top
+	objectClass: sudoRole
+	sudoCommand: ALL
+	sudoHost: ALL
+	sudoOption: !authenticate
+	sudoRunasUser: ALL
+	sudoUser: lsanche
 
 Este usuario ejecutará todos los comandos SUDO sin contraseña.
 
