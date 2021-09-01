@@ -17,7 +17,7 @@ Instalar paquetes OpenLDAP
 Instale los siguientes paquetes LDAP RPM en el servidor LDAP::
 
 	yum -y install openldap compat-openldap openldap-clients openldap-servers openldap-servers-sql openldap-devel
-	yum install openldap.x86_64 compat-openldap.x86_64 openldap-servers.x86_64 openssh-ldap.x86_64 openldap-servers-sql.x86_64 openldap-devel.x86_64 openldap-clients.x86_64
+	yum -y install openldap.x86_64 compat-openldap.x86_64 openldap-servers.x86_64 openssh-ldap.x86_64 openldap-servers-sql.x86_64 openldap-devel.x86_64 openldap-clients.x86_64
 
 Inicie el servicio LDAP y habilítelo para el inicio automático del servicio en el inicio del sistema.::
 
@@ -26,9 +26,9 @@ Inicie el servicio LDAP y habilítelo para el inicio automático del servicio en
 
 Verifica el LDAP.::
 
-	netstat -antup | grep -i 389
-	tcp        0      0 0.0.0.0:389             0.0.0.0:*               LISTEN      1520/slapd          
-	tcp6       0      0 :::389                  :::*                    LISTEN      1520/slapd
+	netstat -natp | grep slapd
+	tcp        0      0 0.0.0.0:389             0.0.0.0:*               LISTEN      19848/slapd         
+	tcp6       0      0 :::389                  :::*                    LISTEN      19848/slapd 
 
 **Importante** bien configurado el hosts y el hostname.::
 
@@ -194,18 +194,18 @@ Crear usuario LDAP
 Creamos un usuario dentro del Dominio::
 
 	vi user.ldif
-	dn: uid=cgomez,ou=People,dc=dominio,dc=local
+	dn: uid=cgomeznt,ou=People,dc=dominio,dc=local
 	objectClass: top
 	objectClass: account
 	objectClass: posixAccount
 	objectClass: shadowAccount
-	cn: cgomez
-	uid: cgomez
+	cn: cgomeznt
+	uid: cgomeznt
 	uidNumber: 9999
 	gidNumber: 100
-	homeDirectory: /home/cgomez
+	homeDirectory: /home/cgomeznt
 	loginShell: /bin/bash
-	gecos: cgomez [Admin (at) dominio]
+	gecos: cgomeznt [Admin (at) dominio]
 	userPassword: {crypt}x
 	shadowLastChange: 17058
 	shadowMin: 0
@@ -213,16 +213,16 @@ Creamos un usuario dentro del Dominio::
 	shadowWarning: 7
 
 
-Utilice el comando ldapadd con el archivo anterior para crear un nuevo usuario llamado "cgomez" en el directorio OpenLDAP.::	
+Utilice el comando ldapadd con el archivo anterior para crear un nuevo usuario llamado "cgomeznt" en el directorio OpenLDAP.::	
 
 	# ldapadd -x -W -D "cn=ldapadm,dc=dominio,dc=local" -f user.ldif
 	Enter LDAP Password: America21
-	adding new entry "uid=cgomez,ou=People,dc=dominio,dc=local"
+	adding new entry "uid=cgomeznt,ou=People,dc=dominio,dc=local"
 
 
 Asigna una contraseña al usuario.::
 
-	# ldappasswd -s SuClave21 -W -D "cn=ldapadm,dc=dominio,dc=local" -x "uid=cgomez,ou=People,dc=dominio,dc=local"
+	# ldappasswd -s SuClave21 -W -D "cn=ldapadm,dc=dominio,dc=local" -x "uid=cgomeznt,ou=People,dc=dominio,dc=local"
 	Enter LDAP Password: America21
 
 
@@ -233,28 +233,28 @@ Dónde,
 
 Verifique las entradas de LDAP.::
 
-	# ldapsearch -x cn=cgomez -b dc=dominio,dc=local
+	# ldapsearch -x cn=cgomeznt -b dc=dominio,dc=local
 		# extended LDIF
 		#
 		# LDAPv3
 		# base <dc=dominio,dc=local> with scope subtree
-		# filter: cn=cgomez
+		# filter: cn=cgomeznt
 		# requesting: ALL
 		#
 
-		# cgomez, People, dominio.local
-		dn: uid=cgomez,ou=People,dc=dominio,dc=local
+		# cgomeznt, People, dominio.local
+		dn: uid=cgomeznt,ou=People,dc=dominio,dc=local
 		objectClass: top
 		objectClass: account
 		objectClass: posixAccount
 		objectClass: shadowAccount
-		cn: cgomez
-		uid: cgomez
+		cn: cgomeznt
+		uid: cgomeznt
 		uidNumber: 9999
 		gidNumber: 100
-		homeDirectory: /home/cgomez
+		homeDirectory: /home/cgomeznt
 		loginShell: /bin/bash
-		gecos: cgomez [Admin (at) dominio]
+		gecos: cgomeznt [Admin (at) dominio]
 		shadowLastChange: 17058
 		shadowMin: 0
 		shadowMax: 99999
@@ -270,13 +270,13 @@ Verifique las entradas de LDAP.::
 
 Para eliminar una entrada de LDAP (opcional).::
 
-	ldapdelete -W -D "cn=ldapadm,dc=dominio,dc=local" "uid=cgomez,ou=People,dc=dominio,dc=local"
+	ldapdelete -W -D "cn=ldapadm,dc=dominio,dc=local" "uid=cgomeznt,ou=People,dc=dominio,dc=local"
 
 Para Modificar una entrada de LDAP (opcional).::
 
 	# vi usermodify.ldiff
 	Para Modificar una entrada de LDAP (opcional).::
-	dn: uid=cgomez,ou=People,dc=dominio,dc=local
+	dn: uid=cgomeznt,ou=People,dc=dominio,dc=local
 	changetype: modify
 	replace: gecos
 	gecos: Carlos Gomez G [Admin (at) dominio]
@@ -286,7 +286,7 @@ Ejecutamos la modificación.::
 
 	# ldapmodify -x -W -D "cn=ldapadm,dc=dominio,dc=local" -f usermodify.ldif 
 	Enter LDAP Password: America21
-	modifying entry "uid=cgomez,ou=People,dc=dominio,dc=local"
+	modifying entry "uid=cgomeznt,ou=People,dc=dominio,dc=local"
 
 
 

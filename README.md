@@ -14,4 +14,6 @@
 * [Agregar schema sudo a LDAP utilizando OLC](guia/schemasudo.rst) 
 * [Configurar SUDO via OpenLDAP Server](guia/sudoLDAP.rst) 
 * [Mantenimiento de la BD Transacional](guia/DBmaintenance.rst) 
+* [OpenLDAP después de instalar no inicia por error de TLS](guia/Error_TLS_luego_de_instalar.rst) 
+
 
