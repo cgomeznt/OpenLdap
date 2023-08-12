@@ -212,12 +212,12 @@ We will create another LDIF file with our domain name, admin user(Manager), and 
 	dn: olcDatabase={2}mdb,cn=config
 	changetype: modify
 	replace: olcSuffix
-	olcSuffix: dc=computingforgeeks,dc=com
+	olcSuffix: dc=dominio,dc=local
 
 	dn: olcDatabase={2}mdb,cn=config
 	changetype: modify
 	replace: olcRootDN
-	olcRootDN: cn=Manager,dc=computingforgeeks,dc=com
+	olcRootDN: cn=Manager,dc=dominio,dc=local
 
 	dn: olcDatabase={2}mdb,cn=config
 	changetype: modify
@@ -228,7 +228,7 @@ We will create another LDIF file with our domain name, admin user(Manager), and 
 	changetype: modify
 	replace: olcAccess
 	olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth"
-	  read by dn.base="cn=Manager,dc=computingforgeeks,dc=com" read by * none
+	  read by dn.base="cn=Manager,dc=dominio,dc=local" read by * none
 	  
 To apply the changes, run::
 
@@ -240,37 +240,37 @@ Step 3 – Create an Organizational Unit on OpenLDAP
 To create an organizational unit (OU). We need to create a file with the entries below::
 
 	$ vim adddomain.ldif
-	dn: dc=computingforgeeks,dc=com
+	dn: dc=dominio,dc=local
 	objectClass: top
 	objectClass: dcObject
 	objectclass: organization
 	o: My example Organisation
 	dc: computingforgeeks
 
-	dn: cn=Manager,dc=computingforgeeks,dc=com
+	dn: cn=Manager,dc=dominio,dc=local
 	objectClass: organizationalRole
 	cn: Manager
 	description: OpenLDAP Manager
 
-	dn: ou=People,dc=computingforgeeks,dc=com
+	dn: ou=People,dc=dominio,dc=local
 	objectClass: organizationalUnit
 	ou: People
 
-	dn: ou=Group,dc=computingforgeeks,dc=com
+	dn: ou=Group,dc=dominio,dc=local
 	objectClass: organizationalUnit
 	ou: Group
 	
 To apply the changes, run::
 
-	$ sudo ldapadd -x -D cn=Manager,dc=computingforgeeks,dc=com -W -f adddomain.ldif
+	$ sudo ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f adddomain.ldif
 	Enter LDAP Password: Enter_set_password_here
-	adding new entry "dc=computingforgeeks,dc=com"
+	adding new entry "dc=dominio,dc=local"
 
-	adding new entry "cn=Manager,dc=computingforgeeks,dc=com"
+	adding new entry "cn=Manager,dc=dominio,dc=local"
 
-	adding new entry "ou=People,dc=computingforgeeks,dc=com"
+	adding new entry "ou=People,dc=dominio,dc=local"
 
-	adding new entry "ou=Group,dc=computingforgeeks,dc=com"
+	adding new entry "ou=Group,dc=dominio,dc=local"
 	
 Step 4 – Manage Users On the OpenLDAP Server
 -------------------------------------------------
@@ -281,7 +281,7 @@ To add a user account on OpenLDAP, create a file::
 	
 In the file, add the below lines and make changes where required::
 
-	dn: uid=testuser,ou=People,dc=computingforgeeks,dc=com
+	dn: uid=testuser,ou=People,dc=dominio,dc=local
 	objectClass: inetOrgPerson
 	objectClass: posixAccount
 	objectClass: shadowAccount
@@ -296,7 +296,7 @@ In the file, add the below lines and make changes where required::
 	shadowMax: 0
 	shadowWarning: 0
 
-	dn: cn=testuser,ou=Group,dc=computingforgeeks,dc=com
+	dn: cn=testuser,ou=Group,dc=dominio,dc=local
 	objectClass: posixGroup
 	cn: testuser
 	gidNumber: 2000
@@ -306,15 +306,15 @@ You can create a user password using the slappasswd utility and replace it at us
 
 Now apply the changes::
 
-	$ sudo ldapadd -x -D cn=Manager,dc=computingforgeeks,dc=com -W -f addtestuser.ldif 
+	$ sudo ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f addtestuser.ldif 
 	Enter LDAP Password: 
-	adding new entry "uid=testuser,ou=People,dc=computingforgeeks,dc=com"
+	adding new entry "uid=testuser,ou=People,dc=dominio,dc=local"
 
-	adding new entry "cn=testuser,ou=Group,dc=computingforgeeks,dc=com"
+	adding new entry "cn=testuser,ou=Group,dc=dominio,dc=local"
 	
 Once created, verify if the user has been added::
 
-	ldapsearch -x cn=testuser -b dc=computingforgeeks,dc=com
+	ldapsearch -x cn=testuser -b dc=dominio,dc=local
 	
 Sample Output::
 
@@ -322,8 +322,8 @@ OpenLDAP Server on Rocky
 Delete users from the LDAP database
 It is also possible to remove a user from the database. For example, to delete the created user above from our LDAP server, we will use the commands::
 
-	sudo ldapdelete -x -W -D 'cn=Manager,dc=computingforgeeks,dc=com' "uid=testuser1,ou=People,dc=computingforgeeks,dc=com"
-	sudo ldapdelete -x -W -D 'cn=Manager,dc=computingforgeeks,dc=com' "cn=testuser1,ou=Group,dc=computingforgeeks,dc=com" 
+	sudo ldapdelete -x -W -D 'cn=Manager,dc=dominio,dc=local' "uid=testuser1,ou=People,dc=dominio,dc=local"
+	sudo ldapdelete -x -W -D 'cn=Manager,dc=dominio,dc=local' "cn=testuser1,ou=Group,dc=dominio,dc=local" 
 	
 Step 5 – Configure OpenLDAP SSL/TLS
 --------------------------------------
