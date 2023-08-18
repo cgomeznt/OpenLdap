@@ -293,15 +293,18 @@ Una vez aplicadas las modificaciones, reiniciamos el servicio::
 
 Ahora probamos si sudo fue agregado al usuario::	
 
-	[Carlos.Gomez.LAPF37H10J] ➤ ssh testuser@192.168.0.13
-	testuser@192.168.0.13's password:
-	X11 forwarding request failed on channel 0
-	Last login: Fri Aug 11 23:48:05 2023 from 192.168.0.1
+	[Carlos.Gomez.LAPF37H10J] ➤ ssh testuser@192.168.0.200
+	testuser@192.168.0.200's password:
+	Last login: Fri Aug 18 00:26:40 2023 from 192.168.0.1
 	[testuser@ldapclient ~]$ id
-	uid=2000(testuser) gid=2000(testuser) groups=2000(testuser) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+	uid=2000(testuser) gid=2000(testuser) groups=2000(testuser)
+	[testuser@ldapclient ~]$ pwd
+	/home/testuser
+	[testuser@ldapclient ~]$
 	[testuser@ldapclient ~]$ sudo bash
 	[sudo] password for testuser:
 	[root@ldapclient testuser]# id
-	uid=0(root) gid=0(root) groups=0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+	uid=0(root) gid=0(root) groups=0(root)
 	[root@ldapclient testuser]#
+
 
