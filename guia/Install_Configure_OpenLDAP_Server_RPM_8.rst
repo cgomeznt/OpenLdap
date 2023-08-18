@@ -375,6 +375,9 @@ Eliminar usuarios de la Base de Datos del LDAP::
 
 	 ldapdelete -x -W -D 'cn=Manager,dc=dominio,dc=local' "uid=testuser1,ou=People,dc=dominio,dc=local"
 	 ldapdelete -x -W -D 'cn=Manager,dc=dominio,dc=local' "cn=testuser1,ou=Group,dc=dominio,dc=local" 
+
+NOTA Si crean otros archivos LDIF para usuarios nuevos, no olviden cambiar el uidNumber y el gidNumber
+
 	
 Step 5 – Configurar OpenLDAP SSL/TLS
 --------------------------------------
