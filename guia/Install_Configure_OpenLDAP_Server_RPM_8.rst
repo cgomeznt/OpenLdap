@@ -427,3 +427,35 @@ Para aplicar los cambios, reiniciamos el service::
 
 	 systemctl restart slapd
 	
+Por ultimo y para estar seguros consultamos el puerto 636 para garantizar que esta bien el certificado::
+
+	# nmap --script ssl-enum-ciphers -p636 192.168.0.21
+	Starting Nmap 7.70 ( https://nmap.org ) at 2023-08-17 22:13 -04
+	Nmap scan report for ldapmaster.dominio.local (192.168.0.21)
+	Host is up (0.00046s latency).
+	
+	PORT    STATE SERVICE
+	636/tcp open  ldapssl
+	| ssl-enum-ciphers:
+	|   TLSv1.2:
+	|     ciphers:
+	|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (secp256r1) - A
+	|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (secp256r1) - A
+	|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+	|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (secp256r1) - A
+	|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+	|       TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (secp256r1) - A
+	|       TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A
+	|       TLS_RSA_WITH_AES_128_CBC_SHA256 (rsa 2048) - A
+	|       TLS_RSA_WITH_AES_128_CCM (rsa 2048) - A
+	|       TLS_RSA_WITH_AES_128_GCM_SHA256 (rsa 2048) - A
+	|       TLS_RSA_WITH_AES_256_CBC_SHA (rsa 2048) - A
+	|       TLS_RSA_WITH_AES_256_CBC_SHA256 (rsa 2048) - A
+	|       TLS_RSA_WITH_AES_256_CCM (rsa 2048) - A
+	|       TLS_RSA_WITH_AES_256_GCM_SHA384 (rsa 2048) - A
+	|     compressors:
+	|       NULL
+	|     cipher preference: client
+	|_  least strength: A
+	
+	Nmap done: 1 IP address (1 host up) scanned in 0.49 seconds
