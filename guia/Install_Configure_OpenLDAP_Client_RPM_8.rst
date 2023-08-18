@@ -149,7 +149,7 @@ Salvamos el archivo y otorgamos los permisos correspondientes::
 	
 Reiniciamos el servicio::
 
-	sudo systemctl restart sssd
+	systemctl restart sssd
 	
 Verificamos que el servicio este en ejecución y sin errores::
 
