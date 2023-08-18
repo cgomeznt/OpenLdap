@@ -1,62 +1,74 @@
-Install and Configure OpenLDAP Server on Rocky Linux 8 / AlmaLinux 8
-======================================================================
+Instalar y configurar OpenLDAP Server en RHEL 8
+===============================================
+
+Los Directory services, también conocidos como name services, funcionan como authoritative identity provider (IdP) para varias empresas en todo el mundo. 
+Asignan los nombres de los recursos de red a las respectivas direcciones de red. Actúa como una infraestructura de información compartida para localizar, 
+gestionar, administrar y organizar recursos cotidianos como volúmenes, carpetas, archivos, impresoras, usuarios, grupos, dispositivos, números de teléfono, etc. 
+Es tan esencial elegir el servidor de directorio correcto para su organización, ya que se convierte en la fuente de verdad para la autenticación y 
+autorización en su espacio de trabajo digital.
+
+**LDAP** es un acrónimo de Protocolo ligero de acceso a directorios (Lightweight directory access protocol). 
+Este es un protocolo utilizado para acceder y modificar el servicio de directorio basado en X.500 que se ejecuta sobre TCP/IP. 
+Se utiliza para abordar la autenticación y compartir información sobre usuarios, sistemas, servicios, redes y aplicaciones desde un servicio de directorio a 
+otros servicios/aplicaciones. No solo puede leer Active Directory, sino que también puede integrarse con otros programas de Linux.
+
+**OpenLDAP** es la implementación gratuita y de código abierto de LDAP desarrollada por OpenLDAP Project y lanzada bajo la licencia única de estilo BSD llamada OpenLDAP Public License. 
+Proporciona una utilidad de línea de comandos que se puede usar para crear y administrar el directorio LDAP. 
+**Para usar esta herramienta, debe tener un conocimiento profundo del protocolo y la estructura LDAP.**
+Para eliminar la disputa, puede usar herramientas de terceros como phpLDAPadmin para administrar el servicio.
+
+**OpenLDAP** ofrece las siguientes características geniales:
+
+**Costos bajos**: es gratis, por lo que es una opción común para las nuevas empresas.
+
+**Flexibilidad**: Esto le da una amplia aplicabilidad.
+
+**Soporte LDAPv3**: Ofrece soporte para autenticación simple y capa de seguridad y seguridad de la capa de transporte.
+
+**Compatibilidad con IPv6**: OpenLDAP admite la versión 6 del Protocolo de Internet de próxima generación.
+
+**OS-agnosticismo**: es totalmente compatible con los sistemas Mac, Windows y Linux.
+
+**API C actualizada**: esto mejora la forma en que los programadores pueden conectarse y usar servidores de directorio LDAP.
+
+**Servidor LDAP autónomo mejorado**
+
+**Compatibilidad con DIFv1**: proporciona compatibilidad total con el formato de intercambio de datos LDAP (LDIF) versión 1.
 
 
-LDAP is an acronym for Lightweight directory access protocol. This is a protocol used to access and modify X.500-based directory service running over TCP/IP. It is used to tackle authentication and share information about users, systems, services, networks, and applications from a directory service to other services/applications. It can not only read Active Directory but also be integrated with other Linux programs.
-
-OpenLDAP is the free and open-source implementation of LDAP developed by the OpenLDAP Project and released under the unique BSD-style license called the OpenLDAP Public License. It provides a command-line utility that can be used to build and manage the LDAP directory. To use this tool, you need to have some deep knowledge of the LDAP protocol and structure. To eliminate the tussle, you can use third-party tools like phpLDAPadmin to manage the service.
-
-OpenLDAP offers the below cool features:
-
-Low Costs: it is free, making it a common choice for startups.
-
-Flexibility: This gives it broad applicability.
-
-LDAPv3 Support: It offers support for Simple Authentication and Security Layer and Transport Layer Security.
-
-IPv6 support: OpenLDAP supports the next generation Internet Protocol version 6.
-
-OS-Agnosticism: It is fully supported on Mac, Windows, and Linux systems.
-
-Updated C API: This improves the way programmers can connect to and use LDAP directory servers.
-
-Enhanced Stand-Alone LDAP Server
-
-DIFv1 Support: It provides full compliance with the LDAP Data Interchange Format (LDIF) version 1.
-
-In this guide, we will learn how to install and configure the OpenLDAP Server on Rocky Linux 8 / AlmaLinux 8.
-
-Prepare Your Server
+Preparando el Server
 ----------------------
-Before we begin the installation, you need to ensure the server is updated::
+Antes de iniciar debemos estar seguros que el servidor este actualizado::
 
 
-	sudo dnf update -y
+	dnf update -y
 	
-Once complete, check if a reboot is required and perform it::
+Una vez completado, verificamos si es necesario reiniciar::
 
-	[ -f /var/run/reboot-required ] && sudo reboot -f
+	[ -f /var/run/reboot-required ] &&  reboot -f
 	
-Set the correct hostname of the system::
+Set el nobre correcto del  hostname ::
 
-	sudo hostnamectl set-hostname ldapmaster.dominio.local
+	 hostnamectl set-hostname ldapmaster.dominio.local
 	
-Update the /etc/hosts with the correct hostnames and IPs as shown::
+Actualizar el  /etc/hosts con el nombre del hostnames y la IPs::
 
-	$ sudo vim /etc/hosts
-	192.168.205.2 ldapmaster.dominio.local
-	192.168.205.13 ldapclient.dominio.local
+	$  vi /etc/hosts
+	192.168.0.21 ldapmaster.dominio.local
+	192.168.0.200 ldapclient.dominio.local
 	
-Step 1 – Install OpenLDAP packages
-Once all the above activities have been performed, enable the symas repository, that provides the OpenLDAP packages::
+Step 1 – Instalar paquetes de OpenLDAP
+-------------------------------------
 
-	sudo wget -q https://repo.symas.com/configs/SOFL/rhel8/sofl.repo -O /etc/yum.repos.d/sofl.repo
+Una vez todas las actividades anteriores esten ejecutadas, habilitamos el repositorio de **symas**, que provee de los paquetes de OpenLDAP::
+
+	 wget -q https://repo.symas.com/configs/SOFL/rhel8/sofl.repo -O /etc/yum.repos.d/sofl-symas.repo
 	
-Once the repository has been enabled, install the packages with the command::
+Una vez el repositorio este habilitado, instalamos los paquetes requeridos::
 
-	sudo dnf install symas-openldap-clients symas-openldap-servers sssd-ldap.x86_64
+	 dnf install symas-openldap-clients symas-openldap-servers sssd-ldap.x86_64
 
-Dependency Tree::
+El arbol de dependecias puede ser aun más que esto::
 
 	Dependencies resolved.
 	================================================================================
@@ -76,7 +88,7 @@ Dependency Tree::
 	Installed size: 6.8 M
 	Is this ok [y/N]: y
 	
-Once the installation is complete, verify as shown::
+Completada la instalación, verificamos::
 
 
 	$ rpm -qa | grep ldap
@@ -86,25 +98,26 @@ Once the installation is complete, verify as shown::
 	sssd-ldap-2.6.2-3.el8.x86_64
 	symas-openldap-clients-2.4.59-1.el8.x86_64
 	
-Step 2 – Configure OpenLDAP Server
+Step 2 – Configurar OpenLDAP Server
 ---------------------------------
 
-Once the installation is complete, you can make several adjustments to the OpenLDAP Server. Some of the required configurations are:
+Ya completa la instalación, podemos aplicar los ajustes de severidad en el OpenLDAP Server. Alguno de los requerimientos de configuración son::
 
-1. Configure SLAPD database
-Now prepare the database template DB_CONFIG::
+1. Configurar SLAPD database
 
-	sudo cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG 
+Ahora preparamos el template de database DB_CONFIG::
+
+	 cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG 
 	
-Set the correct permissions for the file::
+Colocamos los permisos correctos para los archivos::
 
-	sudo chown ldap. /var/lib/ldap/DB_CONFIG 
+	 chown ldap. /var/lib/ldap/DB_CONFIG 
 	
-Now start and enable the slapd service on Rocky Linux 8 / AlmaLinux 8::
+Ahora iniciamos y habilitamos el slapd service::
 
-	sudo systemctl enable --now slapd
+	 systemctl enable --now slapd
 	
-Verify if the service is running::
+Verificamos si el servicio esta running y sin errores ::
 
 	$ systemctl status slapd
 	● slapd.service - OpenLDAP Server Daemon
@@ -123,92 +136,92 @@ Verify if the service is running::
 	   CGroup: /system.slice/slapd.service
 			   └─3919 /usr/sbin/slapd -u ldap -h ldap:/// ldaps:/// ldapi:///
 			   
-Allow the service through the firewall::
+Permitimos en el Firewall el servicio del LDAP::
 
-	sudo firewall-cmd --add-service={ldap,ldaps} --permanent
-	sudo firewall-cmd --reload
+	 firewall-cmd --add-service={ldap,ldaps} --permanent
+	 firewall-cmd --reload
 	
-There are several attributes involved when configuring the OpenLDAP Server. These are::
+Hay varios atributos involucrados al configurar el servidor OpenLDAP. Estos son::
 
-CN – Common Name
+	CN – Common Name
 
-O – Organizational
+	O – Organizational
 
-OU – Organizational Unit
+	OU – Organizational Unit
 
-SN – Last Name
+	SN – Last Name
 
-DC – Domain Component(DC often comes with two entries dc=example,dc=com)
+	DC – Domain Component(DC often comes with two entries dc=example,dc=com)
 
-DN – Distinguished Name
+	DN – Distinguished Name
 
-2. Create the admin password
+2. Creamos el password de the admin
 --------------------------------
 
-First, generate the admin password using slappasswd utility::
+Primero, generamos el password de admin usando la utilidad slappasswd::
 
 	$ slappasswd
 	New password:  Venezuela21
 	Re-enter new password: Venezuela21
 	{SSHA}dpyO1slseAzSUbJ8AR7JC4xNW81koPry
 	
-The password hash starting with {SSHA} is an encrypted format of the password. Now, create a .ldif with the below content::
+El password hash inicia con {SSHA} es un formato para encriptación de password. Ahora, creamos el .ldif con le siguiente contenido::
 
-	$ vim changerootpw.ldif
+	$ vi changerootpw.ldif
 	dn: olcDatabase={0}config,cn=config
 	changetype: modify
 	add: olcRootPW
 	olcRootPW: {SSHA}dpyO1slseAzSUbJ8AR7JC4xNW81koPry
 
-To modify the root password using the created LDIF file as shown::
+Para modificar el root password utilizamos el archivo LDIF creado::
 
-	$ sudo ldapadd -Y EXTERNAL -H ldapi:/// -f changerootpw.ldif
+	$  ldapadd -Y EXTERNAL -H ldapi:/// -f changerootpw.ldif
 	ASL/EXTERNAL authentication started
 	SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
 	SASL SSF: 0
 	modifying entry "olcDatabase={0}config,cn=config"
 	
-3. Import basic Schemas
+3. Importar los basic Schemas
 ---------------------------
 
-There are several schemas required by OpenLDAP. These include Attribute Types, Attribute Syntaxes, Matching Rules, and types of objects that a directory may have. By default, the schemas are stored under /etc/openldap/schema/. For now, we need the cosine, nis & inetorgperson LDAP schemas.
+Hay varios schemas required by OpenLDAP. Estos incluyen Attribute Types, Attribute Syntaxes, Matching Rules, y tipos de objetos  que un directorio puede tener. Por detecto, el schema estan almacenados en /etc/openldap/schema/. Por ahora, solo necesitamos el cosine, nis y inetorgperson LDAP schemas
 
-To import them, use the command::
+Para importar los schemas, usamos el siguiente comando::
 
-	sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
-	sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif 
-	sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+	 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+	 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif 
+	 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
 	
-Create the OpenLDAP SUDO schema::
+Cremaos el OpenLDAP schema::
 
-	sudo cp /usr/share/doc/sudo/schema.OpenLDAP  /etc/openldap/schema/sudo.schema
+	 cp /usr/share/doc//schema.OpenLDAP  /etc/openldap/schema/.schema
 	
-Create the sudo schema LDIF file::
+Creamos el archivo LDIF para el schema::
 
-	sudo tee  /etc/openldap/schema/sudo.ldif<<EOF
-	dn: cn=sudo,cn=schema,cn=config
+	tee  /etc/openldap/schema/.ldif<<EOF
+	dn: cn=,cn=schema,cn=config
 	objectClass: olcSchemaConfig
-	cn: sudo
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.1 NAME 'sudoUser' DESC 'User(s) who may  run sudo' EQUALITY caseExactIA5Match SUBSTR caseExactIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.2 NAME 'sudoHost' DESC 'Host(s) who may run sudo' EQUALITY caseExactIA5Match SUBSTR caseExactIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.3 NAME 'sudoCommand' DESC 'Command(s) to be executed by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.4 NAME 'sudoRunAs' DESC 'User(s) impersonated by sudo (deprecated)' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.5 NAME 'sudoOption' DESC 'Options(s) followed by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.6 NAME 'sudoRunAsUser' DESC 'User(s) impersonated by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.7 NAME 'sudoRunAsGroup' DESC 'Group(s) impersonated by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcObjectClasses: ( 1.3.6.1.4.1.15953.9.2.1 NAME 'sudoRole' SUP top STRUCTURAL DESC 'Sudoer Entries' MUST ( cn ) MAY ( sudoUser $ sudoHost $ sudoCommand $ sudoRunAs $ sudoRunAsUser $ sudoRunAsGroup $ sudoOption $ description ) )
+	cn: 
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.1 NAME 'User' DESC 'User(s) who may  run ' EQUALITY caseExactIA5Match SUBSTR caseExactIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.2 NAME 'Host' DESC 'Host(s) who may run ' EQUALITY caseExactIA5Match SUBSTR caseExactIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.3 NAME 'Command' DESC 'Command(s) to be executed by ' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.4 NAME 'RunAs' DESC 'User(s) impersonated by  (deprecated)' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.5 NAME 'Option' DESC 'Options(s) followed by ' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.6 NAME 'RunAsUser' DESC 'User(s) impersonated by ' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.7 NAME 'RunAsGroup' DESC 'Group(s) impersonated by ' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcObjectClasses: ( 1.3.6.1.4.1.15953.9.2.1 NAME 'Role' SUP top STRUCTURAL DESC 'er Entries' MUST ( cn ) MAY ( User $ Host $ Command $ RunAs $ RunAsUser $ RunAsGroup $ Option $ description ) )
 	EOF
 	
-Apply the configurations::
+Aplicamos la configuración::
 
-	sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/sudo.ldif
+	 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/.ldif
 	
-4. Update the Domain Name in the LDAP Database
+4. Actualizamos el Nombre del Domain Name en la Base de Datos del LDAP
 ----------------------------------------------------
 
-We will create another LDIF file with our domain name, admin user(Manager), and the encrypted password as shown::
+Podemos crear otro archivo LDIF con nuestro nombre de dominio, admin user (Manager), y el password encriptado::
 
-	$ vim setdomainname.ldif
+	$ vi setdomainname.ldif
 	dn: olcDatabase={2}mdb,cn=config
 	changetype: modify
 	replace: olcSuffix
@@ -229,17 +242,17 @@ We will create another LDIF file with our domain name, admin user(Manager), and 
 	replace: olcAccess
 	olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth"
 	  read by dn.base="cn=Manager,dc=dominio,dc=local" read by * none
-	  
-To apply the changes, run::
 
-	sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f setdomainname.ldif
+Para aplicar los cambios, ejecutamos::
+
+	 ldapmodify -Y EXTERNAL -H ldapi:/// -f setdomainname.ldif
 	
-Step 3 – Create an Organizational Unit on OpenLDAP
+Step 3 – Creamos la Organizational Unit en el OpenLDAP
 ----------------------------------------------------
 
-To create an organizational unit (OU). We need to create a file with the entries below::
+Para crear una organizational unit (OU). Requiere crear el archivo LDID con las siguientes entradas::
 
-	$ vim adddomain.ldif
+	$ vi adddomain.ldif
 	dn: dc=dominio,dc=local
 	objectClass: top
 	objectClass: dcObject
@@ -260,9 +273,9 @@ To create an organizational unit (OU). We need to create a file with the entries
 	objectClass: organizationalUnit
 	ou: Group
 	
-To apply the changes, run::
+Para aplicar los cambios, ejecutamos::
 
-	$ sudo ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f adddomain.ldif
+	$  ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f adddomain.ldif
 	Enter LDAP Password: Enter_set_password_here
 	adding new entry "dc=dominio,dc=local"
 
@@ -272,14 +285,14 @@ To apply the changes, run::
 
 	adding new entry "ou=Group,dc=dominio,dc=local"
 	
-Step 4 – Manage Users On the OpenLDAP Server
+Step 4 – Administrar usuarios en el OpenLDAP Server
 -------------------------------------------------
 
-To add a user account on OpenLDAP, create a file::
+Para agregar una cuenta de usuario en el OpenLDAP, creamos el archivo LDIF:: 
 
-	vim addtestuser.ldif
-	
-In the file, add the below lines and make changes where required::
+	vi addtestuser.ldif
+
+En el archivo, agregamos las siguientes lines y modificamos las lineas donde se requieran:
 
 	dn: uid=testuser,ou=People,dc=dominio,dc=local
 	objectClass: inetOrgPerson
@@ -301,72 +314,72 @@ In the file, add the below lines and make changes where required::
 	cn: testuser
 	gidNumber: 2000
 	memberUid: testuser
-	
-You can create a user password using the slappasswd utility and replace it at userPassword: {SSHA}XXXXXXXXXXXXXXXXXXXX
 
-Now apply the changes::
+Podemos crear el user password con la utilidad slappasswd y remplazar {SSHA}XXXXXXXXXXXXXXXXXXXX
 
-	$ sudo ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f addtestuser.ldif 
+Aplicamos los cambios::
+
+	$  ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f addtestuser.ldif 
 	Enter LDAP Password: 
 	adding new entry "uid=testuser,ou=People,dc=dominio,dc=local"
 
 	adding new entry "cn=testuser,ou=Group,dc=dominio,dc=local"
 	
-Once created, verify if the user has been added::
+Una vez creado, verificamos si el usuario fue creado ::
 
 	ldapsearch -x cn=testuser -b dc=dominio,dc=local
 	
-Sample Output::
+Ejemplo de la salida::
 
-OpenLDAP Server on Rocky
-Delete users from the LDAP database
-It is also possible to remove a user from the database. For example, to delete the created user above from our LDAP server, we will use the commands::
 
-	sudo ldapdelete -x -W -D 'cn=Manager,dc=dominio,dc=local' "uid=testuser1,ou=People,dc=dominio,dc=local"
-	sudo ldapdelete -x -W -D 'cn=Manager,dc=dominio,dc=local' "cn=testuser1,ou=Group,dc=dominio,dc=local" 
+
+Elimiar usuarios de la Base de Datos del LDAP::
+
+	 ldapdelete -x -W -D 'cn=Manager,dc=dominio,dc=local' "uid=testuser1,ou=People,dc=dominio,dc=local"
+	 ldapdelete -x -W -D 'cn=Manager,dc=dominio,dc=local' "cn=testuser1,ou=Group,dc=dominio,dc=local" 
 	
-Step 5 – Configure OpenLDAP SSL/TLS
+Step 5 – Configurar OpenLDAP SSL/TLS
 --------------------------------------
 
-To can set a secure client-server communication for OpenLDAP. You need to generate the SSL certificates for OpenLDAP.
+Para poder configurar una comunicacion segura cliente servidor para el OpenLDAP. Necesitamos generar certificados SSL para OpenLDAP.
 
-For example, you can generate self-signed certificates as shown::
+Por ejemplo, para generar un certificado auto firmado::
 
-	sudo openssl req -x509 -nodes -days 365 \
+	 openssl req -x509 -nodes -days 365 \
 	  -newkey rsa:2048 \
-	  -keyout /etc/pki/tls/ldapserver.key \
-	  -out /etc/pki/tls/ldapserver.crt
+	  -keyout /certs/ldapserver.key \
+	  -out /certs/ldapserver.crt
 	  
-Once generated, set the correct ownership::
+Ona vez generado, configuramos el propietario::
 
-	sudo chown ldap:ldap /etc/pki/tls/{ldapserver.crt,ldapserver.key}
+	 chown ldap:ldap /certs/{ldapserver.crt,ldapserver.key}
 	
-Now, create a config file::
+Ahora, creamos el archivo de configuracion LDIF::
 
-	$ vim add-tls.ldif
+	$ vi add-tls.ldif
 	dn: cn=config
 	changetype: modify
 	add: olcTLSCACertificateFile
-	olcTLSCACertificateFile: /etc/pki/tls/ldapserver.crt
+	olcTLSCACertificateFile: /certs/ldapserver.crt
 	-
 	add: olcTLSCertificateKeyFile
-	olcTLSCertificateKeyFile: /etc/pki/tls/ldapserver.key
+	olcTLSCertificateKeyFile: /certs/ldapserver.key
 	-
 	add: olcTLSCertificateFile
-	olcTLSCertificateFile: /etc/pki/tls/ldapserver.crt
+	olcTLSCertificateFile: /certs/ldapserver.crt
 	
 Apply the changes::
 
-	sudo ldapadd -Y EXTERNAL -H ldapi:/// -f add-tls.ldif
+	 ldapadd -Y EXTERNAL -H ldapi:/// -f add-tls.ldif
 	
-Finally, update the OpenLDAP config::
+Finalmente, actualizamos el archivo de configuracion del OpenLDAP::
 
-	$ sudo vim /etc/openldap/ldap.conf
+	$  vi /etc/openldap/ldap.conf
 	...
 	#TLS_CACERT     /etc/pki/tls/cert.pem
 	TLS_CACERT     /etc/pki/tls/ldapserver.crt
 	
-For the changes to apply, restart the service::
+Para aplicar los cambios, reiniciamos el service::
 
-	sudo systemctl restart slapd
+	 systemctl restart slapd
 	
