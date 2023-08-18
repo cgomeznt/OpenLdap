@@ -1,48 +1,42 @@
-Configure OpenLDAP Client on Rocky Linux 8 / AlmaLinux 8
+Configurar un cliente OpenLDAP en RHEL 8
 =======================================================
 
+Una vez estemos seguro que el SO esta actualizado set el hostname::
 
-What is OpenLDAP?
-LDAP is an abbreviation of the Lightweight directory access protocol. It is a protocol used to access and modify X.500-based directory service running over TCP/IP. Once configured, LDAP can be used for authentication and sharing information about users, networks, systems, services, and applications from a directory service to other services/applications.
-
-OpenLDAP is a free and open-source implementation of LDAP. This tool provides a command-line utility that can be used to build and manage the LDAP directory. OpenLDAP is highly preferred due to:
-
-
-Once the installation is complete, set the hostname::
-
-	sudo hostnamectl set-hostname ldapclient.dominio.local
+	hostnamectl set-hostname ldapclient.dominio.local
 	
-Now update your /etc/hosts file as shown::
+Ahora actualizamos el archivo /etc/hosts::
 
-	$ sudo vim /etc/hosts
+	$ vim /etc/hosts
 	##OpenLDAP server
-	192.168.205.2 ldapmaster.dominio.local
+	192.168.0.21 ldapmaster.dominio.local
 
 	##OpenLDAP Client
-	192.168.205.16 ldapclient.dominio.local
+	192.168.0.200 ldapclient.dominio.local
 	
-For this, case, my OpenLDAP server is running under the domain name ‘ldapmaster.dominio.local’
+Par este caso el Dominio **dominio.local** esta corriendo en  ‘ldapmaster.dominio.local’, ver link https://github.com/cgomeznt/OpenLdap/blob/master/guia/Install_Configure_OpenLDAP_Server_RPM_8.rst
 
-Verify if the server is reachable::
+Verificar si el servidor LDAP esta disponible::
 
 	$ sudo ping -c3 ldapmaster.dominio.local
-	PING ldapmaster.dominio.local (192.168.205.2) 56(84) bytes of data.
-	64 bytes from ldapmaster.dominio.local (192.168.205.2): icmp_seq=1 ttl=64 time=0.362 ms
-	64 bytes from ldapmaster.dominio.local (192.168.205.2): icmp_seq=2 ttl=64 time=0.295 ms
-	64 bytes from ldapmaster.dominio.local (192.168.205.2): icmp_seq=3 ttl=64 time=0.265 ms
+	PING ldapmaster.dominio.local (192.168.0.21) 56(84) bytes of data.
+	64 bytes from ldapmaster.dominio.local (192.168.0.21): icmp_seq=1 ttl=64 time=0.362 ms
+	64 bytes from ldapmaster.dominio.local (192.168.0.21): icmp_seq=2 ttl=64 time=0.295 ms
+	64 bytes from ldapmaster.dominio.local (192.168.0.21): icmp_seq=3 ttl=64 time=0.265 ms
 
 	--- ldapmaster.dominio.local ping statistics ---
 	3 packets transmitted, 3 received, 0% packet loss, time 2030ms
 	rtt min/avg/max/mdev = 0.265/0.307/0.362/0.043 ms
 	Step 1 – Install OpenLDAP Client and SSSD Packages
 	
-Having configured the FQDN and Hosts file, we will install the OpenLDAP Client and SSSD Packages on Rocky Linux 8 / AlmaLinux 8. The SSSD package(System Security Service Daemon) is used to enrol Linux systems to the directory services such as Active Directory IPA Server, and the LDAP domain.
+Teniendo configurado el FQDN en el archivo Hosts, podemos instalar el cliente de OpenLDAP y el SSSD Packages.
+EL SSSD package(System Security Service Daemon) es usado para enrolar a los sistemas Linux en directory services tal como un Active Directory IPA Server, y el LDAP domain.
 
-To install all the required packages, issue the command::
+Para instalar todos los paquetes requeridos::
 
-	sudo dnf install openldap-clients sssd sssd-ldap oddjob-mkhomedir libsss_sudo
+	dnf install openldap-clients sssd sssd-ldap oddjob-mkhomedir libsss_sudo
 	
-Dependency Tree::
+Arbol de dependencia::
 
 	......
 	Transaction Summary
@@ -53,7 +47,7 @@ Dependency Tree::
 	Total download size: 4.6 M
 	Is this ok [y/N]: y
 	
-Once installed, you need to change the authentication profile to SSSD. List the available profiles::
+Una vez instalado, se requiere cambiar la Autenticación del perfil SSD. Lista de perfiles disponibles::
 
 	$ authselect list
 	- minimal	 Local users only for minimal installations
@@ -61,9 +55,9 @@ Once installed, you need to change the authentication profile to SSSD. List the 
 	- sssd   	 Enable SSSD for system authentication (also for local users only)
 	- winbind	 Enable winbind for system authentication
 	
-Now switch to the SSSD profile::
+Ahora cambiamos el Perfil SSSD::
 
-	$ sudo authselect select sssd with-mkhomedir --force
+	$ authselect select sssd with-mkhomedir --force
 	Backup stored at /var/lib/authselect/backups/2022-09-24-18-22-35.bE7tCJ
 	Profile "sssd" was selected.
 	The following nsswitch maps are overwritten by the profile:
@@ -73,17 +67,16 @@ Now switch to the SSSD profile::
 	- automount
 	- services
 
-	Make sure that SSSD service is configured and enabled. See SSSD documentation for more information.
+Esta es la salida del comando de arriba. Debemos estar seguros que el Servicio SSSD esta configurado y habilitado. Ver documentacion de SSSD para mayor información::
 	 
-	- with-mkhomedir is selected, make sure pam_oddjob_mkhomedir module
-	  is present and oddjobd service is enabled and active
-	  - systemctl enable --now oddjobd.service
+	- with-mkhomedir is selected, make sure pam_oddjob_mkhomedir moduleis present and oddjobd service is enabled and active
+	- systemctl enable --now oddjobd.service
 	  
-After this, start and enable the oddjobd service::
+Despues de esto, iniciar y habilitar el servicio oddjobd service::
 
-	sudo systemctl enable --now oddjobd.service
+	systemctl enable --now oddjobd.service
 	
-Verify if the service is running::
+Verificar que el servicio este en ejecución::
 
 	$ systemctl status oddjobd.service
 	● oddjobd.service - privileged operations for unprivileged applications
@@ -95,24 +88,24 @@ Verify if the service is running::
 	   CGroup: /system.slice/oddjobd.service
 			   └─1080524 /usr/sbin/oddjobd -n -p /run/oddjobd.pid -t 300
 			   
-Step 2 – Configure OpenLDAP Client and SSSD Services
+Step 2 – Configurar el Cliente OpenLDAP y el servicio de SSSD
 -------------------------------------------------------
 
-Once installed, you can configure the OpenLDAP Client and SSSD Services. We will begin by configuring the OpenLDAP Client::
+Podmos configurar el cliente de OpenLDAP y el servicio de SSSD. Para iniciar la configuracion del Cliente OpenLDAP::
 
-	sudo vim /etc/openldap/ldap.conf
+	vim /etc/openldap/ldap.conf
 	
-In the file, define your OpenLDAP server and the base search domain name as configured::
+Dentro del archivo, definimos el Server de OpenLDAP y el Dominio a buscar en la Base de Datos::
 
 	URI ldap://ldapmaster.dominio.local
 	BASE dc=dominio,dc=local
 	SUDOERS_BASE ou=sudo,dc=dominio,dc=local
 	
-The last line is for the SUDO access we will create later in the guide. Save the file and configure the SSSD service::
+La ultima linea es para el acceso SUDO, que luego estaremos configurando más adelante::
 
-	sudo vim /etc/sssd/sssd.conf
+	vim /etc/sssd/sssd.conf
 	
-Add the files below and replace the ‘ldap_uri‘, ‘ldap_search_base‘ and ‘sudoers_base‘ appropriately::
+Agregamos las siguientes lineas al archivo y remplazamos el  ‘ldap_uri‘, ‘ldap_search_base‘ y ‘sudoers_base‘ apropiadamente::
 
 	[domain/default]
 	id_provider = ldap
@@ -137,15 +130,15 @@ Add the files below and replace the ‘ldap_uri‘, ‘ldap_search_base‘ and �
 
 	[sudo]
 	
-Save the file and set the required permissions::
+Salvamos el archivo y otorgamos los permisos correspondientes::
 
-	sudo chmod 0600 /etc/sssd/sssd.conf
+	chmod 0600 /etc/sssd/sssd.conf
 	
-Restart the service::
+Reiniciamos el servicio::
 
 	sudo systemctl restart sssd
 	
-Verify if the service is running::
+Verificamos que el servicio este en ejecución y sin errores::
 
 	$ systemctl status sssd
 	● sssd.service - System Security Services Daemon
@@ -162,26 +155,26 @@ Verify if the service is running::
 			   ├─1081330 /usr/libexec/sssd/sssd_pam --uid 0 --gid 0 --logger=files
 			   └─1081331 /usr/libexec/sssd/sssd_autofs --uid 0 --gid 0 --logger=files
 			   
-Step 3 – Test OpenLDAP Authentication on Rocky Linux 8 / AlmaLinux 8
+Step 3 – Probar la autenticación del Cliente OpenLDAP Authentication
 --------------------------------------------------------------------
 
-Once the above configurations have been made, we will test if we can log in using the available user accounts on the OpenLDAP servers.
+Una vez se haya completado las configuraciones, podremos realizar pruebas, podemos realizar pruebas con los usuarios disponibles en el Servidor de OpenLDAP.
 
-Find the available user accounts on the server::
+Buscamos los usuarios disponibles en el servidor de OpenLDAP::
 
 	ldapsearch -x -b "ou=people,dc=dominio,dc=local"
 	
 
-It is also possible to use SSH as shown::
+Es posible utilizar el SSH::
 
-	ssh testuser@192.168.205.16
+	ssh testuser@192.168.0.200
 	
-Sample output:
+Ejemplo de la salida del comando anterior::
 
-Step 4 – Adding sudoers to OpenLDAP
+Step 4 – Agregando el sudoers de OpenLDAP
 ------------------------------------------
 
-It is possible to add users with the sudo attribute to OpenLDAP. When setting up the OpenLDAP server, we created an LDIF for the sudo schema at /etc/openldap/schema/sudo.ldif::
+Es posible agregar a los usuarios atributos de sudo del OpenLDAP. Cuando configuramos el Server de OpenLDAP, creamos un archivo para el schema sudo en /etc/openldap/schema/sudo.ldif::
 
 	$ cat /etc/openldap/schema/sudo.ldif
 	dn: cn=sudo,cn=schema,cn=config
@@ -199,7 +192,7 @@ It is possible to add users with the sudo attribute to OpenLDAP. When setting up
 	olcAttributeTypes: {9}( 1.3.6.1.4.1.15953.9.1.10 NAME 'sudoOrder' DESC 'an integer to order the sudoRole entries' EQUALITY integerMatch ORDERING integerOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 )
 	olcObjectClasses: {0}( 1.3.6.1.4.1.15953.9.2.1 NAME 'sudoRole' DESC 'Sudoer Entries' SUP top STRUCTURAL MUST cn MAY ( sudoUser $ sudoHost $ sudoCommand $ sudoRunAs $ sudoRunAsUser $ sudoRunAsGroup $ sudoOption $ sudoOrder $ sudoNotBefore $ sudoNotAfter $ description ) )
 
-Now on the OpenLDAP server, create a sudoers Organization Unit (ou)::
+Ahora en el Servidor de OpenLDAP, crearemos una, sudoers Organization Unit (ou)::
 
 	vim sudoers.ldif
 
@@ -209,13 +202,13 @@ Now on the OpenLDAP server, create a sudoers Organization Unit (ou)::
 	ou: sudo
 	description: my-demo LDAP SUDO Entry
 	
-Apply the LDIF::
+Aplicamos el archivo LDIF::
 
-	$ sudo ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f sudoers.ldif
+	$ ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f sudoers.ldif
 	Enter LDAP Password: 
 	adding new entry "ou=sudo,dc=dominio,dc=local"
 	
-Create the defaults LDIF::
+Creamos los defaults LDIF::
 
 	$ vim defaults.ldif
 	dn: cn=defaults,ou=sudo,dc=dominio,dc=local
@@ -227,13 +220,13 @@ Create the defaults LDIF::
 	sudoOption: secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 	#sudoOrder: 1
 	
-Apply the changes::
+Aplicamos los cambios::
 
-	$ sudo ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f defaults.ldif
+	$ ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f defaults.ldif
 	Enter LDAP Password: 
 	adding new entry "cn=defaults,ou=sudo,dc=dominio,dc=local"
 	
-Finally, add the user to the role::
+Finalmente, agregamos el role al usuario::
 
 	$ vim sudo_user.ldif
 	dn: cn=testuser,ou=sudo,dc=dominio,dc=local
@@ -245,33 +238,34 @@ Finally, add the user to the role::
 	sudoRunAsUser: ALL
 	sudoUser: testuser
 	#sudoOrder: 2
-	
-Remember to replace testuser with an actual user in your OpenLDAP server. You can also set the exact sudo command to be executed by the user instead of ALL, for example::
+
+Recuerda cambiar el testuser con un usuario valido en el Servidor de OpenLDAP.
+Puede tambien configurar el comando exacto de sudo que se quiere permitir para el usuario. Ejemplo::
 
 	sudoCommand: /usr/sbin/useradd
 	
-If you want to have the NOPASSWD OpenLDAP SUDO, add the line::
+Si se quiere se puede tener el NOPASSWD OpenLDAP SUDO, agregue la siguiente linea::
 
 	sudooption: !authenticate
 
-Now add the LDIF to the server::
+Ahora agregamos el LDIF al Servidor OpenLDAP::
 
 	sudo ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f sudo_user.ldif
 	
-Once added, get back to the LDAP client and modify the file below:::
+Una vez agregado, regresamos al Cliente OpenLDAP y modificamos el siguiente archivo::
 
 	##On the LDAP client##
-	sudo vim /etc/nsswitch.conf
+	vim /etc/nsswitch.conf
 	
-In the file, add the line::
+Y en el archivo, agregamos esta linea::
 
 	sudoers: files sss
 	
-Once the changes have been made, restart the service::
+Una vez aplicadas las modificaciones, reiniciamos el servicio::
 
-	sudo systemctl restart sssd
-	
-Now test if sudo has been added for the user::
+	systemctl restart sssd
+
+Ahora probamos si sudo fue agregado al usuario::	
 
 	[Carlos.Gomez.LAPF37H10J] ➤ ssh testuser@192.168.0.13
 	testuser@192.168.0.13's password:
@@ -284,10 +278,4 @@ Now test if sudo has been added for the user::
 	[root@ldapclient testuser]# id
 	uid=0(root) gid=0(root) groups=0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
 	[root@ldapclient testuser]#
-
-
-OpenLDAP Client on Rocky LinuxAlmaLinux 5
-Voila!
-
-We have successfully configured OpenLDAP Client on Rocky Linux 8 / AlmaLinux 8. Now you can add several Rocky Linux 8 / AlmaLinux 8 clients to the OpenLDAP Server and use them as desired. We have also learned how to configure sudo access for the OpenLDAP users. I hope this was significant to you,
 
