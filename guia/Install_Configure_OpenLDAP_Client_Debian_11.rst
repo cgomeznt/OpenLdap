@@ -66,7 +66,7 @@ Agregamos las siguientes lineas al archivo y remplazamos el  ‘ldap_uri‘, ‘
 	chpass_provider = ldap
 	ldap_uri = ldap://ldapmaster.dominio.local
 	ldap_search_base = dc=dominio,dc=local
-	sudoers_base ou=sudo,dc=dominio,dc=local
+	#sudoers_base ou=sudo,dc=dominio,dc=local
 	sudo_provider = ldap
 	ldap_id_use_start_tls = True
 	ldap_tls_cacertdir = /etc/openldap/certs
