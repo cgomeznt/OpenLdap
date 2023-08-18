@@ -194,7 +194,9 @@ Ejemplo de la salida del comando anterior. Recuerda que en el Servidor de OpenLD
 Step 4 – Agregando el sudoers de OpenLDAP
 ------------------------------------------
 
-Es posible agregar a los usuarios atributos de sudo del OpenLDAP. Cuando configuramos el Server de OpenLDAP, creamos un archivo para el schema sudo en /etc/openldap/schema/sudo.ldif::
+Es posible agregar a los usuarios atributos de sudo del OpenLDAP. Cuando configuramos el Server de OpenLDAP, creamos un archivo para el schema sudo en /etc/openldap/schema/sudo.ldif.
+
+Esto lo vemos en el Server de OpenLdap::
 
 	$ cat /etc/openldap/schema/sudo.ldif
 	dn: cn=sudo,cn=schema,cn=config
