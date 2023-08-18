@@ -385,6 +385,8 @@ Creamos el directorio en donde estaran los certificados::
 
 	mkdir /certs
 
+	chown -R ldap. /certs
+
 Por ejemplo, para generar un certificado auto firmado::
 
 	 openssl req -x509 -nodes -days 365 \
