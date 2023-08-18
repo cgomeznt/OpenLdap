@@ -258,7 +258,7 @@ Para crear una organizational unit (OU). Requiere crear el archivo LDID con las 
 	objectClass: dcObject
 	objectclass: organization
 	o: My example Organisation
-	dc: computingforgeeks
+	dc: dominio
 
 	dn: cn=Manager,dc=dominio,dc=local
 	objectClass: organizationalRole
