@@ -371,7 +371,7 @@ Ejemplo de la salida::
 	# numEntries: 2
 
 
-Elimiar usuarios de la Base de Datos del LDAP::
+Eliminar usuarios de la Base de Datos del LDAP::
 
 	 ldapdelete -x -W -D 'cn=Manager,dc=dominio,dc=local' "uid=testuser1,ou=People,dc=dominio,dc=local"
 	 ldapdelete -x -W -D 'cn=Manager,dc=dominio,dc=local' "cn=testuser1,ou=Group,dc=dominio,dc=local" 
@@ -380,6 +380,10 @@ Step 5 – Configurar OpenLDAP SSL/TLS
 --------------------------------------
 
 Para poder configurar una comunicacion segura cliente servidor para el OpenLDAP. Necesitamos generar certificados SSL para OpenLDAP.
+
+Creamos el directorio en donde estaran los certificados::
+
+	mkdir /certs
 
 Por ejemplo, para generar un certificado auto firmado::
 
