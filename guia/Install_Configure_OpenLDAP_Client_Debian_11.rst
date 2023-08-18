@@ -15,7 +15,7 @@ Ahora actualizamos el archivo /etc/hosts::
 	192.168.0.200 ldapclient.dominio.local
 	
 	##OpenLDAP Client Debian 11
-	192.168.0.201 ldapclient.dominio.local
+	192.168.0.201 ldapclient2.dominio.local
 	
 Par este caso el Dominio **dominio.local** esta corriendo en  ‘ldapmaster.dominio.local’, ver link https://github.com/cgomeznt/OpenLdap/blob/master/guia/Install_Configure_OpenLDAP_Server_RPM_8.rst
 
@@ -277,7 +277,6 @@ Ahora probamos si sudo fue agregado al usuario, recuerda que debes tener instala
 	Last login: Fri Aug 18 01:22:10 2023 from 192.168.0.1
 	testuser@ldapclient2:~$
 	testuser@ldapclient2:~$ sudo bash
-	sudo: unable to resolve host ldapclient2.dominio.local: Name or service not known
 	[sudo] password for testuser:
 	root@ldapclient2:/home/testuser# id
 	uid=0(root) gid=0(root) groups=0(root)
