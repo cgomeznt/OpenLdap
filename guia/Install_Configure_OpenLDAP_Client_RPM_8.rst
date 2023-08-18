@@ -68,9 +68,22 @@ Ahora cambiamos el Perfil SSSD::
 	- services
 
 Esta es la salida del comando de arriba. Debemos estar seguros que el Servicio SSSD esta configurado y habilitado. Ver documentacion de SSSD para mayor información::
-	 
-	- with-mkhomedir is selected, make sure pam_oddjob_mkhomedir moduleis present and oddjobd service is enabled and active
-	- systemctl enable --now oddjobd.service
+
+	Backup stored at /var/lib/authselect/backups/2023-08-18-03-00-37.4aDr5J
+	Profile "sssd" was selected.
+	The following nsswitch maps are overwritten by the profile:
+	- passwd
+	- group
+	- netgroup
+	- automount
+	- services
+	
+	Make sure that SSSD service is configured and enabled. See SSSD documentation for more information.
+	
+	- with-mkhomedir is selected, make sure pam_oddjob_mkhomedir module
+	  is present and oddjobd service is enabled and active
+	  - systemctl enable --now oddjobd.service
+
 	  
 Despues de esto, iniciar y habilitar el servicio oddjobd service::
 
