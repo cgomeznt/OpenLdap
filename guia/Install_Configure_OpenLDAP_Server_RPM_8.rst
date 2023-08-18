@@ -196,9 +196,9 @@ Cremaos el schema sudo para OpenLDAP::
 
 	 cp /usr/share/doc/sudo/schema.OpenLDAP  /etc/openldap/schema/sudo.schema
 	
-Creamos el archivo LDIF para el schema::
+Creamos el archivo sudo LDIF para el schema::
 
-	tee  /etc/openldap/schema/.ldif<<EOF
+	tee  /etc/openldap/schema/sudo.ldif<<EOF
 	dn: cn=,cn=schema,cn=config
 	objectClass: olcSchemaConfig
 	cn: 
