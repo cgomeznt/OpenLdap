@@ -182,7 +182,14 @@ Es posible utilizar el SSH::
 
 	ssh testuser@192.168.0.200
 	
-Ejemplo de la salida del comando anterior::
+Ejemplo de la salida del comando anterior. Recuerda que en el Servidor de OpenLDAP colocamos al usuarios testuser la clave **America21**::
+
+	[Carlos.Gomez.LAPF37H10J] ➤ ssh testuser@192.168.0.200
+	testuser@192.168.0.200's password:
+	Last failed login: Thu Aug 17 23:08:03 -04 2023 from 192.168.0.1 on ssh:notty
+	There were 3 failed login attempts since the last successful login.
+	/usr/bin/xauth:  file /home/testuser/.Xauthority does not exist
+	[testuser@ldapclient ~]$
 
 Step 4 – Agregando el sudoers de OpenLDAP
 ------------------------------------------
