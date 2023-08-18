@@ -292,7 +292,7 @@ Para agregar una cuenta de usuario en el OpenLDAP, creamos el archivo LDIF::
 
 	vi addtestuser.ldif
 
-En el archivo, agregamos las siguientes lines y modificamos las lineas donde se requieran:
+En el archivo, agregamos las siguientes lines y modificamos las lineas donde se requieran::
 
 	dn: uid=testuser,ou=People,dc=dominio,dc=local
 	objectClass: inetOrgPerson
