@@ -330,7 +330,45 @@ Una vez creado, verificamos si el usuario fue creado ::
 	ldapsearch -x cn=testuser -b dc=dominio,dc=local
 	
 Ejemplo de la salida::
-
+	
+	# extended LDIF
+	#
+	# LDAPv3
+	# base <dc=dominio,dc=local> with scope subtree
+	# filter: cn=testuser
+	# requesting: ALL
+	#
+	
+	# testuser, People, dominio.local
+	dn: uid=testuser,ou=People,dc=dominio,dc=local
+	objectClass: inetOrgPerson
+	objectClass: posixAccount
+	objectClass: shadowAccount
+	cn: testuser
+	sn: temp
+	userPassword:: e1NTSEF9dSs2OTQ1amU2TGVvbmh2d1BSbHlVR2wwOWtSemFQNEU=
+	loginShell: /bin/bash
+	uidNumber: 2000
+	gidNumber: 2000
+	homeDirectory: /home/testuser
+	shadowLastChange: 0
+	shadowMax: 0
+	shadowWarning: 0
+	uid: testuser
+	
+	# testuser, Group, dominio.local
+	dn: cn=testuser,ou=Group,dc=dominio,dc=local
+	objectClass: posixGroup
+	cn: testuser
+	gidNumber: 2000
+	memberUid: testuser
+	
+	# search result
+	search: 2
+	result: 0 Success
+	
+	# numResponses: 3
+	# numEntries: 2
 
 
 Elimiar usuarios de la Base de Datos del LDAP::
