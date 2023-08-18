@@ -192,9 +192,9 @@ Para importar los schemas, usamos el siguiente comando::
 	 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif 
 	 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
 	
-Cremaos el OpenLDAP schema::
+Cremaos el schema sudo para OpenLDAP::
 
-	 cp /usr/share/doc/sudo/schema.OpenLDAP  /etc/openldap/schema/.schema
+	 cp /usr/share/doc/sudo/schema.OpenLDAP  /etc/openldap/schema/sudo.schema
 	
 Creamos el archivo LDIF para el schema::
 
@@ -214,7 +214,7 @@ Creamos el archivo LDIF para el schema::
 	
 Aplicamos la configuración::
 
-	 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/.ldif
+	 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/sudo.ldif
 	
 4. Actualizamos el Nombre del Domain Name en la Base de Datos del LDAP
 ----------------------------------------------------
