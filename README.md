@@ -3,6 +3,7 @@
 * [Introducción a OpenLDAP](guia/introduccion.rst)
 * [Instalar y configurar OpenLDAP Server en Almalinux 8](guia/Install_Configure_OpenLDAP_Server_RPM_8.rst)
 * [Instalar y configurar OpenLDAP Client en Almalinux 8](guia/Install_Configure_OpenLDAP_Client_RPM_8.rst)
+* [Instalar y configurar OpenLDAP Client en Debian 11](guia/Install_Configure_OpenLDAP_Client_Debian_11.rst)
 * [Instalar y configurar OpenLDAP en Centos 6](guia/instalarconfigurar.rst)
 * [Respaldo y Restauracion de OpenLDAP](guia/respaldorestauracion.rst)
 * [Configuración de OpenLDAP sobre TLS](guia/configurartls.rst)
