@@ -194,7 +194,7 @@ Para importar los schemas, usamos el siguiente comando::
 	
 Cremaos el OpenLDAP schema::
 
-	 cp /usr/share/doc//schema.OpenLDAP  /etc/openldap/schema/.schema
+	 cp /usr/share/doc/sudo/schema.OpenLDAP  /etc/openldap/schema/.schema
 	
 Creamos el archivo LDIF para el schema::
 
