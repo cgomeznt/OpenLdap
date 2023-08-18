@@ -191,6 +191,8 @@ Ejemplo de la salida del comando anterior. Recuerda que en el Servidor de OpenLD
 	/usr/bin/xauth:  file /home/testuser/.Xauthority does not exist
 	[testuser@ldapclient ~]$
 
+**NOTA** Si crean otros archivos LDIF para usuarios nuevos, no olviden cambiar el **uidNumber** y el **gidNumber**
+
 Step 4 – Agregando el sudoers de OpenLDAP
 ------------------------------------------
 
@@ -268,7 +270,7 @@ Puede tambien configurar el comando exacto de sudo que se quiere permitir para e
 	
 Si se quiere se puede tener el NOPASSWD OpenLDAP SUDO, agregue la siguiente linea::
 
-	sudooption: !authenticate
+	sudoOption: !authenticate
 
 Ahora agregamos el LDIF al Servidor OpenLDAP::
 
@@ -286,6 +288,8 @@ Y en el archivo, agregamos esta linea::
 Una vez aplicadas las modificaciones, reiniciamos el servicio::
 
 	systemctl restart sssd
+
+**NOTA** Recuerda reinicias siempre el sssd, Si en el Servidor OpenLDAP realiazarópn modificaciones, debes reiniciar el sssd para que sincronice contra el Servidor OpenLDAP.
 
 Ahora probamos si sudo fue agregado al usuario::	
 
