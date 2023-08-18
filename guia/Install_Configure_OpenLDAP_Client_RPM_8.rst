@@ -173,7 +173,7 @@ Step 3 – Probar la autenticación del Cliente OpenLDAP Authentication
 
 Una vez se haya completado las configuraciones, podremos realizar pruebas, podemos realizar pruebas con los usuarios disponibles en el Servidor de OpenLDAP.
 
-Buscamos los usuarios disponibles en el servidor de OpenLDAP::
+En el mismos Cliente OpenLDAP. Buscamos los usuarios disponibles en el servidor de OpenLDAP::
 
 	ldapsearch -x -b "ou=people,dc=dominio,dc=local"
 	
