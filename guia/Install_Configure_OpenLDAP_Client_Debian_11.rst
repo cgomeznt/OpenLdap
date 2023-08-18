@@ -3,7 +3,7 @@ Configurar un cliente OpenLDAP en Debian 11
 
 Una vez estemos seguro que el SO esta actualizado set el hostname::
 
-	hostnamectl set-hostname ldapclient2.dominio.local
+	hostnamectl set-hostname ldapclient2.dominio.local sudo
 	
 Ahora actualizamos el archivo /etc/hosts::
 
@@ -262,17 +262,25 @@ Una vez aplicadas las modificaciones, reiniciamos el servicio::
 
 	systemctl restart sssd
 
-Ahora probamos si sudo fue agregado al usuario::	
+Ahora probamos si sudo fue agregado al usuario, recuerda que debes tener instalado **sudo**::	
 
-	[Carlos.Gomez.LAPF37H10J] ➤ ssh testuser@192.168.0.13
-	testuser@192.168.0.13's password:
-	X11 forwarding request failed on channel 0
-	Last login: Fri Aug 11 23:48:05 2023 from 192.168.0.1
-	[testuser@ldapclient ~]$ id
-	uid=2000(testuser) gid=2000(testuser) groups=2000(testuser) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
-	[testuser@ldapclient ~]$ sudo bash
+	[Carlos.Gomez.LAPF37H10J] ➤ ssh testuser@192.168.0.201
+	testuser@192.168.0.201's password:
+	Linux ldapclient2.dominio.local 5.10.0-24-amd64 #1 SMP Debian 5.10.179-5 (2023-08-08) x86_64
+	
+	The programs included with the Debian GNU/Linux system are free software;
+	the exact distribution terms for each program are described in the
+	individual files in /usr/share/doc/*/copyright.
+	
+	Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+	permitted by applicable law.
+	Last login: Fri Aug 18 01:22:10 2023 from 192.168.0.1
+	testuser@ldapclient2:~$
+	testuser@ldapclient2:~$ sudo bash
+	sudo: unable to resolve host ldapclient2.dominio.local: Name or service not known
 	[sudo] password for testuser:
-	[root@ldapclient testuser]# id
-	uid=0(root) gid=0(root) groups=0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
-	[root@ldapclient testuser]#
+	root@ldapclient2:/home/testuser# id
+	uid=0(root) gid=0(root) groups=0(root)
+	root@ldapclient2:/home/testuser#
+
 
