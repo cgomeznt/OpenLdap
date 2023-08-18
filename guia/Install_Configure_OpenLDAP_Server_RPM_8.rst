@@ -199,17 +199,17 @@ Cremaos el schema sudo para OpenLDAP::
 Creamos el archivo sudo LDIF para el schema::
 
 	tee  /etc/openldap/schema/sudo.ldif<<EOF
-	dn: cn=,cn=schema,cn=config
+	dn: cn=sudo,cn=schema,cn=config
 	objectClass: olcSchemaConfig
-	cn: 
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.1 NAME 'User' DESC 'User(s) who may  run ' EQUALITY caseExactIA5Match SUBSTR caseExactIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.2 NAME 'Host' DESC 'Host(s) who may run ' EQUALITY caseExactIA5Match SUBSTR caseExactIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.3 NAME 'Command' DESC 'Command(s) to be executed by ' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.4 NAME 'RunAs' DESC 'User(s) impersonated by  (deprecated)' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.5 NAME 'Option' DESC 'Options(s) followed by ' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.6 NAME 'RunAsUser' DESC 'User(s) impersonated by ' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.7 NAME 'RunAsGroup' DESC 'Group(s) impersonated by ' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
-	olcObjectClasses: ( 1.3.6.1.4.1.15953.9.2.1 NAME 'Role' SUP top STRUCTURAL DESC 'er Entries' MUST ( cn ) MAY ( User $ Host $ Command $ RunAs $ RunAsUser $ RunAsGroup $ Option $ description ) )
+	cn: sudo
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.1 NAME 'sudoUser' DESC 'User(s) who may  run sudo' EQUALITY caseExactIA5Match SUBSTR caseExactIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.2 NAME 'sudoHost' DESC 'Host(s) who may run sudo' EQUALITY caseExactIA5Match SUBSTR caseExactIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.3 NAME 'sudoCommand' DESC 'Command(s) to be executed by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.4 NAME 'sudoRunAs' DESC 'User(s) impersonated by sudo (deprecated)' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.5 NAME 'sudoOption' DESC 'Options(s) followed by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.6 NAME 'sudoRunAsUser' DESC 'User(s) impersonated by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcAttributeTypes: ( 1.3.6.1.4.1.15953.9.1.7 NAME 'sudoRunAsGroup' DESC 'Group(s) impersonated by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+	olcObjectClasses: ( 1.3.6.1.4.1.15953.9.2.1 NAME 'sudoRole' SUP top STRUCTURAL DESC 'Sudoer Entries' MUST ( cn ) MAY ( sudoUser $ sudoHost $ sudoCommand $ sudoRunAs $ sudoRunAsUser $ sudoRunAsGroup $ sudoOption $ description ) )
 	EOF
 	
 Aplicamos la configuración::
