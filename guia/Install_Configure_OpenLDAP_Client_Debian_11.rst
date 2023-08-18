@@ -39,54 +39,13 @@ Para instalar todos los paquetes requeridos::
 
 	apt install sssd libpam-sss libnss-sss sssd-tools libsss-sudo
 
-	
-Una vez instalado, se requiere cambiar la Autenticación del perfil SSD. Lista de perfiles disponibles::
-
-	$ authselect list
-	- minimal	 Local users only for minimal installations
-	- nis    	 Enable NIS for system authentication
-	- sssd   	 Enable SSSD for system authentication (also for local users only)
-	- winbind	 Enable winbind for system authentication
-	
-Ahora cambiamos el Perfil SSSD::
-
-	$ authselect select sssd with-mkhomedir --force
-	Backup stored at /var/lib/authselect/backups/2022-09-24-18-22-35.bE7tCJ
-	Profile "sssd" was selected.
-	The following nsswitch maps are overwritten by the profile:
-	- passwd
-	- group
-	- netgroup
-	- automount
-	- services
-
-Esta es la salida del comando de arriba. Debemos estar seguros que el Servicio SSSD esta configurado y habilitado. Ver documentacion de SSSD para mayor información::
-	 
-	- with-mkhomedir is selected, make sure pam_oddjob_mkhomedir moduleis present and oddjobd service is enabled and active
-	- systemctl enable --now oddjobd.service
-	  
-Despues de esto, iniciar y habilitar el servicio oddjobd service::
-
-	systemctl enable --now oddjobd.service
-	
-Verificar que el servicio este en ejecución::
-
-	$ systemctl status oddjobd.service
-	● oddjobd.service - privileged operations for unprivileged applications
-	   Loaded: loaded (/usr/lib/systemd/system/oddjobd.service; enabled; vendor preset: disabled)
-	   Active: active (running) since Sat 2022-09-24 14:23:52 EDT; 6s ago
-	 Main PID: 1080524 (oddjobd)
-		Tasks: 1 (limit: 23198)
-	   Memory: 876.0K
-	   CGroup: /system.slice/oddjobd.service
-			   └─1080524 /usr/sbin/oddjobd -n -p /run/oddjobd.pid -t 300
 			   
 Step 2 – Configurar el Cliente OpenLDAP y el servicio de SSSD
 -------------------------------------------------------
 
 Podmos configurar el cliente de OpenLDAP y el servicio de SSSD. Para iniciar la configuracion del Cliente OpenLDAP::
 
-	vim /etc/openldap/ldap.conf
+	vim /etc/ldap/ldap.conf
 	
 Dentro del archivo, definimos el Server de OpenLDAP y el Dominio a buscar en la Base de Datos::
 
