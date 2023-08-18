@@ -146,7 +146,7 @@ Buscamos los usuarios disponibles en el servidor de OpenLDAP::
 
 Es posible utilizar el SSH::
 
-	ssh testuser@192.168.0.200
+	ssh testuser@192.168.0.201
 	
 Ejemplo de la salida del comando anterior::
 
