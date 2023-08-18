@@ -150,6 +150,24 @@ Es posible utilizar el SSH::
 	
 Ejemplo de la salida del comando anterior::
 
+	[Carlos.Gomez.LAPF37H10J] ➤ ssh testuser@192.168.0.201
+	testuser@192.168.0.201's password:
+	Creating directory '/home/testuser'.
+	Linux ldapclient2.dominio.local 5.10.0-24-amd64 #1 SMP Debian 5.10.179-5 (2023-08-08) x86_64
+	
+	The programs included with the Debian GNU/Linux system are free software;
+	the exact distribution terms for each program are described in the
+	individual files in /usr/share/doc/*/copyright.
+	
+	Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+	permitted by applicable law.
+	/usr/bin/xauth:  file /home/testuser/.Xauthority does not exist
+	testuser@ldapclient2:~$
+	
+	testuser@ldapclient2:~$ id
+	uid=2000(testuser) gid=2000(testuser) groups=2000(testuser)
+	testuser@ldapclient2:~$
+
 Step 4 – Agregando el sudoers de OpenLDAP
 ------------------------------------------
 
