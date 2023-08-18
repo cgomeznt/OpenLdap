@@ -421,7 +421,7 @@ Finalmente, actualizamos el archivo de configuracion del OpenLDAP::
 	$  vi /etc/openldap/ldap.conf
 	...
 	#TLS_CACERT     /etc/pki/tls/cert.pem
-	TLS_CACERT     /etc/pki/tls/ldapserver.crt
+	TLS_CACERT     /certs/ldapserver.crt
 	
 Para aplicar los cambios, reiniciamos el service::
 
