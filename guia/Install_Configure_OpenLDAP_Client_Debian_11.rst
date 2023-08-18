@@ -7,7 +7,7 @@ Una vez estemos seguro que el SO esta actualizado set el hostname::
 	
 Ahora actualizamos el archivo /etc/hosts::
 
-	$ vim /etc/hosts
+	$ vi /etc/hosts
 	##OpenLDAP server
 	192.168.0.21 ldapmaster.dominio.local
 
@@ -45,7 +45,7 @@ Step 2 – Configurar el Cliente OpenLDAP y el servicio de SSSD
 
 Podmos configurar el cliente de OpenLDAP y el servicio de SSSD. Para iniciar la configuracion del Cliente OpenLDAP::
 
-	vim /etc/ldap/ldap.conf
+	vi /etc/ldap/ldap.conf
 	
 Dentro del archivo, definimos el Server de OpenLDAP y el Dominio a buscar en la Base de Datos::
 
@@ -55,7 +55,7 @@ Dentro del archivo, definimos el Server de OpenLDAP y el Dominio a buscar en la 
 	
 La ultima linea es para el acceso SUDO, que luego estaremos configurando más adelante::
 
-	vim /etc/sssd/sssd.conf
+	vi /etc/sssd/sssd.conf
 	
 Agregamos las siguientes lineas al archivo y remplazamos el  ‘ldap_uri‘, ‘ldap_search_base‘ y ‘sudoers_base‘ apropiadamente::
 
@@ -88,7 +88,7 @@ Salvamos el archivo y otorgamos los permisos correspondientes::
 	
 Reiniciamos el servicio::
 
-	sudo systemctl restart sssd
+	systemctl restart sssd
 	
 Verificamos que el servicio este en ejecución y sin errores::
 
@@ -107,6 +107,9 @@ Verificamos que el servicio este en ejecución y sin errores::
 			   ├─1081330 /usr/libexec/sssd/sssd_pam --uid 0 --gid 0 --logger=files
 			   └─1081331 /usr/libexec/sssd/sssd_autofs --uid 0 --gid 0 --logger=files
 
+Para ver el LOG::
+
+	 tail -f /var/log/sssd/sssd.log
 
 La siguiente configuración es para que el Pluggable Authentication Module (PAM) al hacer inicio de sesión se cree el home directory de dicho usuario.
 
@@ -170,7 +173,7 @@ Es posible agregar a los usuarios atributos de sudo del OpenLDAP. Cuando configu
 
 Ahora en el Servidor de OpenLDAP, crearemos una, sudoers Organization Unit (ou)::
 
-	vim sudoers.ldif
+	vi sudoers.ldif
 
 	dn: ou=sudo,dc=dominio,dc=local
 	objectClass: organizationalUnit
@@ -186,7 +189,7 @@ Aplicamos el archivo LDIF::
 	
 Creamos los defaults LDIF::
 
-	$ vim defaults.ldif
+	$ vi defaults.ldif
 	dn: cn=defaults,ou=sudo,dc=dominio,dc=local
 	objectClass: sudoRole
 	objectClass: top
@@ -204,7 +207,7 @@ Aplicamos los cambios::
 	
 Finalmente, agregamos el role al usuario::
 
-	$ vim sudo_user.ldif
+	$ vi sudo_user.ldif
 	dn: cn=testuser,ou=sudo,dc=dominio,dc=local
 	objectClass: sudoRole
 	objectClass: top
@@ -226,7 +229,7 @@ Si se quiere se puede tener el NOPASSWD OpenLDAP SUDO, agregue la siguiente line
 
 Ahora agregamos el LDIF al Servidor OpenLDAP::
 
-	sudo ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f sudo_user.ldif
+	ldapadd -x -D cn=Manager,dc=dominio,dc=local -W -f sudo_user.ldif
 	
 Una vez agregado, regresamos al Cliente OpenLDAP y modificamos el siguiente archivo::
 
