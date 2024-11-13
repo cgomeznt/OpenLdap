@@ -13,6 +13,11 @@ Consultamos las BD del OpenLdap::
   olcRootDN: cn=admin,dc=credicard,dc=com,dc=ve
   olcRootPW:: e1NTSEF9Q3d4RkZ1cnlsZFJWelFLaStaZSs0aW00TGZjWDlxRTM=
 
+Creamos la clave::
+
+  #slappasswd -h {SSHA} -s America21
+  {SSHA}twxXvCF7BcL6CSZERNmWqD/2E6loIN9D
+
 Crear los archivos ldif::
 
   # vi changepass.ldif
